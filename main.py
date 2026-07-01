@@ -1,5 +1,6 @@
 from analyzer.parser import read_log_file, parse_logs
 from analyzer.statistics import generate_statistics
+from analyzer.detector import detect_bruteforce
 
 
 def main():
@@ -13,6 +14,7 @@ def main():
     parsed_logs = parse_logs(log_lines)
 
     stats = generate_statistics(parsed_logs)
+    
 
     print("\n📊 LOG STATISTICS\n")
 
@@ -29,6 +31,23 @@ def main():
     print(
         f"Most Active IP     : {stats['top_ip'][0]} ({stats['top_ip'][1]} requests)"
     )
+    alerts = detect_bruteforce(parsed_logs)
+
+    print("\n🚨 SECURITY ALERTS\n")
+
+    if alerts:
+
+        for alert in alerts:
+
+            print("-" * 40)
+            print(f"User      : {alert['username']}")
+            print(f"IP        : {alert['ip_address']}")
+            print(f"Attempts  : {alert['attempts']}")
+            print("Risk      : HIGH")
+
+    else:
+
+        print("No suspicious activity detected.")
 
 
 if __name__ == "__main__":

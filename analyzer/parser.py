@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+from datetime import datetime
 
 from analyzer.models import LogEntry
 
@@ -42,7 +43,10 @@ def parse_logs(log_lines: list[str]) -> list[LogEntry]:
 
         parsed_logs.append(
             LogEntry(
-                timestamp=match.group("timestamp"),
+                timestamp=datetime.strptime(
+                    f"2026 {match.group('timestamp')}",
+                    "%Y %b %d %H:%M:%S"
+                ),
                 username=match.group("username"),
                 ip_address=match.group("ip"),
                 status=status,
