@@ -1,4 +1,5 @@
 from analyzer.parser import read_log_file, parse_logs
+from analyzer.statistics import generate_statistics
 
 
 def main():
@@ -7,14 +8,27 @@ def main():
     print("SMART LOG ANALYZER")
     print("=" * 50)
 
-    logs = read_log_file("logs/auth.log")
+    log_lines = read_log_file("logs/auth.log")
 
-    parsed_logs = parse_logs(logs)
+    parsed_logs = parse_logs(log_lines)
 
-    print(f"\nParsed {len(parsed_logs)} log entries\n")
+    stats = generate_statistics(parsed_logs)
 
-    for log in parsed_logs:
-        print(log)
+    print("\n📊 LOG STATISTICS\n")
+
+    print(f"Total Logs         : {stats['total_logs']}")
+    print(f"Successful Logins  : {stats['successful_logins']}")
+    print(f"Failed Logins      : {stats['failed_logins']}")
+    print(f"Unique Users       : {stats['unique_users']}")
+    print(f"Unique IPs         : {stats['unique_ips']}")
+
+    print(
+        f"Most Active User   : {stats['top_user'][0]} ({stats['top_user'][1]} logins)"
+    )
+
+    print(
+        f"Most Active IP     : {stats['top_ip'][0]} ({stats['top_ip'][1]} requests)"
+    )
 
 
 if __name__ == "__main__":
