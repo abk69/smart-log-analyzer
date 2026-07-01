@@ -31,24 +31,28 @@ def main():
     print(
         f"Most Active IP     : {stats['top_ip'][0]} ({stats['top_ip'][1]} requests)"
     )
+    
     alerts = detect_bruteforce(parsed_logs)
 
-    print("\n🚨 SECURITY ALERTS\n")
+    print("\n🔒 SECURITY REPORT\n")
 
     if alerts:
 
         for alert in alerts:
 
-            print("-" * 40)
+            print("=" * 40)
+            print("🚨 BRUTE FORCE DETECTED")
+            print("=" * 40)
+
             print(f"User      : {alert['username']}")
             print(f"IP        : {alert['ip_address']}")
             print(f"Attempts  : {alert['attempts']}")
-            print("Risk      : HIGH")
+            print(f"Window    : {alert['window']}")
+            print()
 
     else:
 
-        print("No suspicious activity detected.")
-
+        print("✅ No suspicious activity detected.")
 
 if __name__ == "__main__":
     main()

@@ -1,12 +1,16 @@
 from collections import defaultdict
+from datetime import timedelta
+
 from analyzer.models import LogEntry
 
 
-def detect_bruteforce(logs: list[LogEntry], threshold: int = 5):
+def detect_bruteforce(
+    logs: list[LogEntry],
+    threshold: int = 5,
+    window_minutes: int = 2,
+):
 
-    failed_attempts = defaultdict(int)
-
-    alerts = []
+    failed_logs = defaultdict(list)
 
     for log in logs:
 
@@ -14,18 +18,38 @@ def detect_bruteforce(logs: list[LogEntry], threshold: int = 5):
 
             key = (log.username, log.ip_address)
 
-            failed_attempts[key] += 1
+            failed_logs[key].append(log.timestamp)
 
-    for (user, ip), count in failed_attempts.items():
+    alerts = []
 
-        if count >= threshold:
+    for (user, ip), timestamps in failed_logs.items():
 
-            alerts.append(
-                {
-                    "username": user,
-                    "ip_address": ip,
-                    "attempts": count,
-                }
-            )
+        timestamps.sort()
+
+        for i in range(len(timestamps)):
+
+            count = 1
+
+            for j in range(i + 1, len(timestamps)):
+
+                if timestamps[j] - timestamps[i] <= timedelta(
+                    minutes=window_minutes
+                ):
+                    count += 1
+                else:
+                    break
+
+            if count >= threshold:
+
+                alerts.append(
+                    {
+                        "username": user,
+                        "ip_address": ip,
+                        "attempts": count,
+                        "window": f"{window_minutes} minutes",
+                    }
+                )
+
+                break
 
     return alerts

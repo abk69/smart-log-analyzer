@@ -8,3 +8,11 @@ class LogEntry:
     username: str
     ip_address: str
     status: str
+
+    def __str__(self):
+        return (
+            f"[{self.timestamp}] "
+            f"{self.username} "
+            f"{self.ip_address} "
+            f"{self.status}"
+        )
