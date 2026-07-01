@@ -1,24 +1,20 @@
-from analyzer.parser import read_log_file
+from analyzer.parser import read_log_file, parse_logs
 
 
 def main():
+
     print("=" * 50)
-    print("        SMART LOG ANALYZER")
+    print("SMART LOG ANALYZER")
     print("=" * 50)
 
-    try:
-        logs = read_log_file("logs/auth.log")
+    logs = read_log_file("logs/auth.log")
 
-        print("✅ Log file loaded successfully.\n")
-        print(f"Total Log Entries: {len(logs)}\n")
+    parsed_logs = parse_logs(logs)
 
-        print("Sample Logs:\n")
+    print(f"\nParsed {len(parsed_logs)} log entries\n")
 
-        for log in logs:
-            print(log)
-
-    except Exception as e:
-        print(f"Error: {e}")
+    for log in parsed_logs:
+        print(log)
 
 
 if __name__ == "__main__":
