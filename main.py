@@ -1,6 +1,7 @@
 from analyzer.parser import read_log_file, parse_logs
 from analyzer.statistics import generate_statistics
 from analyzer.detector import detect_bruteforce
+from analyzer.report import (generate_csv_report,generate_json_report,)
 
 
 def main():
@@ -53,6 +54,13 @@ def main():
     else:
 
         print("✅ No suspicious activity detected.")
+        
+    generate_csv_report(stats, alerts)
+    generate_json_report(stats, alerts)
+
+    print("\n📄 Reports generated successfully!")
+    print("📁 reports/security_report.csv")
+    print("📁 reports/security_report.json")
 
 if __name__ == "__main__":
     main()
