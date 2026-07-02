@@ -1,66 +1,98 @@
+import argparse
+
 from analyzer.parser import read_log_file, parse_logs
 from analyzer.statistics import generate_statistics
 from analyzer.detector import detect_bruteforce
-from analyzer.report import (generate_csv_report,generate_json_report,)
+from analyzer.report import (
+    generate_csv_report,
+    generate_json_report,
+)
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description="Smart Log Analyzer"
+    )
+
+    parser.add_argument(
+        "logfile",
+        help="Path to the log file"
+    )
+
+    return parser.parse_args()
 
 
 def main():
 
-    print("=" * 50)
-    print("SMART LOG ANALYZER")
-    print("=" * 50)
+    args = parse_arguments()
 
-    log_lines = read_log_file("logs/auth.log")
+    try:
 
-    parsed_logs = parse_logs(log_lines)
+        print("=" * 50)
+        print("          SMART LOG ANALYZER")
+        print("=" * 50)
 
-    stats = generate_statistics(parsed_logs)
-    
+        # Read Logs
+        log_lines = read_log_file(args.logfile)
 
-    print("\n📊 LOG STATISTICS\n")
+        # Parse Logs
+        parsed_logs = parse_logs(log_lines)
 
-    print(f"Total Logs         : {stats['total_logs']}")
-    print(f"Successful Logins  : {stats['successful_logins']}")
-    print(f"Failed Logins      : {stats['failed_logins']}")
-    print(f"Unique Users       : {stats['unique_users']}")
-    print(f"Unique IPs         : {stats['unique_ips']}")
+        # Generate Statistics
+        stats = generate_statistics(parsed_logs)
 
-    print(
-        f"Most Active User   : {stats['top_user'][0]} ({stats['top_user'][1]} logins)"
-    )
+        print("\n📊 LOG STATISTICS\n")
 
-    print(
-        f"Most Active IP     : {stats['top_ip'][0]} ({stats['top_ip'][1]} requests)"
-    )
-    
-    alerts = detect_bruteforce(parsed_logs)
+        print(f"Total Logs         : {stats['total_logs']}")
+        print(f"Successful Logins  : {stats['successful_logins']}")
+        print(f"Failed Logins      : {stats['failed_logins']}")
+        print(f"Unique Users       : {stats['unique_users']}")
+        print(f"Unique IPs         : {stats['unique_ips']}")
 
-    print("\n🔒 SECURITY REPORT\n")
+        print(
+            f"Most Active User   : {stats['top_user'][0]} ({stats['top_user'][1]} logins)"
+        )
 
-    if alerts:
+        print(
+            f"Most Active IP     : {stats['top_ip'][0]} ({stats['top_ip'][1]} requests)"
+        )
 
-        for alert in alerts:
+        # Detect Brute Force Attacks
+        alerts = detect_bruteforce(parsed_logs)
 
-            print("=" * 40)
-            print("🚨 BRUTE FORCE DETECTED")
-            print("=" * 40)
+        print("\n🔒 SECURITY REPORT\n")
 
-            print(f"User      : {alert['username']}")
-            print(f"IP        : {alert['ip_address']}")
-            print(f"Attempts  : {alert['attempts']}")
-            print(f"Window    : {alert['window']}")
-            print()
+        if alerts:
 
-    else:
+            for alert in alerts:
 
-        print("✅ No suspicious activity detected.")
-        
-    generate_csv_report(stats, alerts)
-    generate_json_report(stats, alerts)
+                print("=" * 40)
+                print("🚨 BRUTE FORCE DETECTED")
+                print("=" * 40)
 
-    print("\n📄 Reports generated successfully!")
-    print("📁 reports/security_report.csv")
-    print("📁 reports/security_report.json")
+                print(f"User      : {alert['username']}")
+                print(f"IP        : {alert['ip_address']}")
+                print(f"Attempts  : {alert['attempts']}")
+                print(f"Window    : {alert['window']}")
+                print()
+
+        else:
+            print("✅ No suspicious activity detected.")
+
+        # Generate Reports
+        generate_csv_report(stats, alerts)
+        generate_json_report(stats, alerts)
+
+        print("\n📄 Reports generated successfully!")
+        print("📁 reports/security_report.csv")
+        print("📁 reports/security_report.json")
+
+    except FileNotFoundError as e:
+        print(f"\n❌ File Error: {e}")
+
+    except Exception as e:
+        print(f"\n❌ Unexpected Error: {e}")
+
 
 if __name__ == "__main__":
     main()
