@@ -43,10 +43,17 @@ def parse_linux_line(line: str):
         else "FAILED"
     )
 
+    event_type = (
+        "LOGIN_SUCCESS"
+        if status == "SUCCESS"
+        else "LOGIN_FAILED"
+    )
+
     return LogEntry(
         timestamp=timestamp,
         username=match.group("username"),
         ip_address=match.group("ip"),
         status=status,
         source="linux",
+        event_type=event_type,
     )

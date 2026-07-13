@@ -1,1 +1,0 @@
-def detect_bruteforce(logs): return []
