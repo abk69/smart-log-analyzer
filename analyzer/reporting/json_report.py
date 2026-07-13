@@ -1,0 +1,1 @@
+def generate_json_report(*a,**k):pass

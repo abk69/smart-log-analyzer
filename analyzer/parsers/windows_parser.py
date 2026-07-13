@@ -1,0 +1,1 @@
+def parse_windows_logs(lines): return []

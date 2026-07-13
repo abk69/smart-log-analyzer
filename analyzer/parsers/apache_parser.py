@@ -1,0 +1,1 @@
+def parse_apache_logs(lines): return []
