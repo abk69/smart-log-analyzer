@@ -3,3 +3,5 @@ Jun 26 09:30:15 server sshd[3002]: Failed password for john from 198.51.100.20 p
 Jun 26 09:30:30 server sshd[3003]: Failed password for alice from 198.51.100.20 port 51003 ssh2
 Jun 26 09:30:45 server sshd[3004]: Failed password for mike from 198.51.100.20 port 51004 ssh2
 Jun 26 09:31:00 server sshd[3005]: Failed password for emma from 198.51.100.20 port 51005 ssh2clear
+172.16.1.45 - - [26/Jun/2026:09:40:15 +0000] "GET /login?id=1%27%20OR%201=1-- HTTP/1.1" 500 812
+172.16.1.45 - - [26/Jun/2026:09:40:15 +0000] "GET /products HTTP/1.1" 200 812

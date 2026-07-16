@@ -2,7 +2,7 @@ import argparse
 
 from analyzer.parser import read_log_file
 from analyzer.parsers.parser_dispatcher import parse_logs
-
+from analyzer.detectors.sql_injection import detect_sql_injection
 from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.password_spray import detect_password_spray
 
@@ -39,6 +39,7 @@ def main():
 
     alerts.extend(detect_brute_force(parsed_logs))
     alerts.extend(detect_password_spray(parsed_logs))
+    alerts.extend(detect_sql_injection(parsed_logs))
 
     # -----------------------------
     # Display Alerts
