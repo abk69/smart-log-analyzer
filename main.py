@@ -5,6 +5,8 @@ from analyzer.parsers.parser_dispatcher import parse_logs
 from analyzer.detectors.sql_injection import detect_sql_injection
 from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.password_spray import detect_password_spray
+from analyzer.detectors.xss import detect_xss
+from analyzer.statistics import generate_statistics
 
 
 def main():
@@ -40,6 +42,43 @@ def main():
     alerts.extend(detect_brute_force(parsed_logs))
     alerts.extend(detect_password_spray(parsed_logs))
     alerts.extend(detect_sql_injection(parsed_logs))
+    alerts.extend(detect_xss(parsed_logs))
+
+    stats = generate_statistics(parsed_logs)
+
+    print("\n" + "=" * 60)
+    print("LOG SUMMARY")
+    print("=" * 60)
+
+    print(f"Total Logs         : {stats['total_logs']}")
+    print(f"Linux Logs         : {stats['linux_logs']}")
+    print(f"Windows Logs       : {stats['windows_logs']}")
+    print(f"Apache Logs        : {stats['apache_logs']}")
+
+    print()
+
+    print(f"Successful Logins  : {stats['successful_logins']}")
+    print(f"Failed Logins      : {stats['failed_logins']}")
+    print(f"HTTP Requests      : {stats['http_requests']}")
+
+    print()
+
+    print(f"Unique Users       : {stats['unique_users']}")
+    print(f"Unique IPs         : {stats['unique_ips']}")
+
+    print()
+
+    print(
+        f"Most Active User   : "
+        f"{stats['top_user'][0]} "
+        f"({stats['top_user'][1]})"
+    )
+
+    print(
+        f"Most Active IP     : "
+        f"{stats['top_ip'][0]} "
+        f"({stats['top_ip'][1]})"
+    )
 
     # -----------------------------
     # Display Alerts
