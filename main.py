@@ -1,5 +1,7 @@
 import argparse
+import sys
 
+from analyzer.exceptions import LogAnalyzerError
 from analyzer.parser import read_log_file
 from analyzer.parsers.parser_dispatcher import parse_logs
 from analyzer.detectors.sql_injection import detect_sql_injection
@@ -7,10 +9,10 @@ from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.password_spray import detect_password_spray
 from analyzer.detectors.xss import detect_xss
 from analyzer.statistics import generate_statistics
+from analyzer.utils import setup_logging
 
 
-def main():
-
+def main() -> int:
     parser = argparse.ArgumentParser(
         description="Smart Log Analyzer"
     )
@@ -21,13 +23,17 @@ def main():
     )
 
     args = parser.parse_args()
+    setup_logging(level="INFO")
 
     print("=" * 60)
     print("SMART LOG ANALYZER")
     print("=" * 60)
 
-    # Read Logs
-    log_lines = read_log_file(args.logfile)
+    try:
+        log_lines = read_log_file(args.logfile)
+    except LogAnalyzerError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
 
     # Parse Logs
     parsed_logs = parse_logs(log_lines)
@@ -89,7 +95,7 @@ def main():
 
     if not alerts:
         print("\nNo Security Alerts Found.\n")
-        return
+        return 0
 
     for i, alert in enumerate(alerts, start=1):
 
@@ -106,7 +112,8 @@ def main():
     print("\n" + "=" * 60)
     print("Analysis Complete")
     print("=" * 60)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

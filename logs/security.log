@@ -1,100 +1,100 @@
-Jun 26 09:00:02 server sshd[1001]: Failed password for admin from 198.51.100.20 port 51957 ssh2
-Jun 26 09:00:07 server sshd[1002]: Failed password for john from 198.51.100.20 port 40682 ssh2
-Jun 26 09:00:13 server sshd[1003]: Failed password for alice from 198.51.100.20 port 53551 ssh2
-Jun 26 09:00:17 server sshd[1004]: Failed password for mike from 198.51.100.20 port 51593 ssh2
-Jun 26 09:00:22 server sshd[1005]: Failed password for emma from 198.51.100.20 port 40066 ssh2
-2026-06-26T09:00:25 EVENT_ID=4624 USER=abhishek IP=10.0.0.16 MESSAGE="An account was successfully logged on."
-Jun 26 09:00:31 server sshd[1006]: Failed password for john from 192.168.1.29 port 33235 ssh2
-Jun 26 09:00:32 server sshd[1007]: Failed password for admin from 198.51.100.20 port 33873 ssh2
-Jun 26 09:00:34 server sshd[1008]: Failed password for john from 198.51.100.20 port 31291 ssh2
-Jun 26 09:00:39 server sshd[1009]: Failed password for alice from 198.51.100.20 port 58260 ssh2
-Jun 26 09:00:45 server sshd[1010]: Failed password for mike from 198.51.100.20 port 51134 ssh2
-Jun 26 09:00:46 server sshd[1011]: Failed password for emma from 198.51.100.20 port 36773 ssh2
-2026-06-26T09:00:52 EVENT_ID=4625 USER=abhishek IP=10.0.0.11 MESSAGE="An account failed to log on."
-2026-06-26T09:00:58 EVENT_ID=4624 USER=david IP=10.0.0.14 MESSAGE="An account was successfully logged on."
-172.16.1.16 - - [26/Jun/2026:09:01:04 +0000] "GET /search?q=<script>alert(1)</script> HTTP/1.1" 200 266
-Jun 26 09:01:09 server sshd[1012]: Failed password for admin from 192.168.1.12 port 53745 ssh2
-172.16.1.73 - - [26/Jun/2026:09:01:14 +0000] "GET /products HTTP/1.1" 200 342
-Jun 26 09:01:18 server sshd[1013]: Failed password for admin from 192.168.1.25 port 49936 ssh2
-Jun 26 09:01:20 server sshd[1014]: Accepted password for abhishek from 192.168.1.18 port 46945 ssh2
-2026-06-26T09:01:22 EVENT_ID=4624 USER=abhishek IP=10.0.0.12 MESSAGE="An account was successfully logged on."
-Jun 26 09:01:28 server sshd[1015]: Failed password for admin from 192.168.1.33 port 53752 ssh2
-172.16.1.64 - - [26/Jun/2026:09:01:30 +0000] "GET /contact HTTP/1.1" 200 2846
-172.16.1.15 - - [26/Jun/2026:09:01:32 +0000] "GET /products HTTP/1.1" 200 1369
-172.16.1.27 - - [26/Jun/2026:09:01:35 +0000] "GET /checkout HTTP/1.1" 200 302
-2026-06-26T09:01:39 EVENT_ID=4625 USER=david IP=10.0.0.39 MESSAGE="An account failed to log on."
-2026-06-26T09:01:45 EVENT_ID=4625 USER=emma IP=10.0.0.34 MESSAGE="An account failed to log on."
-Jun 26 09:01:48 server sshd[1016]: Accepted password for alice from 192.168.1.23 port 55292 ssh2
-Jun 26 09:01:52 server sshd[1017]: Failed password for abhishek from 192.168.1.47 port 49642 ssh2
-2026-06-26T09:01:53 EVENT_ID=4625 USER=john IP=10.0.0.23 MESSAGE="An account failed to log on."
-Jun 26 09:01:54 server sshd[1018]: Failed password for mike from 192.168.1.50 port 57712 ssh2
-Jun 26 09:01:59 server sshd[1019]: Accepted password for abhishek from 192.168.1.40 port 42565 ssh2
-Jun 26 09:02:01 server sshd[1020]: Failed password for admin from 203.0.113.10 port 53769 ssh2
-Jun 26 09:02:07 server sshd[1021]: Failed password for admin from 203.0.113.10 port 50490 ssh2
-Jun 26 09:02:11 server sshd[1022]: Failed password for admin from 203.0.113.10 port 59221 ssh2
-Jun 26 09:02:15 server sshd[1023]: Failed password for admin from 203.0.113.10 port 52800 ssh2
-Jun 26 09:02:21 server sshd[1024]: Failed password for admin from 203.0.113.10 port 42959 ssh2
-Jun 26 09:02:22 server sshd[1025]: Failed password for admin from 203.0.113.10 port 47967 ssh2
-Jun 26 09:02:26 server sshd[1026]: Failed password for admin from 203.0.113.10 port 50284 ssh2
-Jun 26 09:02:28 server sshd[1027]: Failed password for admin from 203.0.113.10 port 37837 ssh2
-Jun 26 09:02:31 server sshd[1028]: Failed password for admin from 203.0.113.10 port 47997 ssh2
-Jun 26 09:02:36 server sshd[1029]: Failed password for admin from 203.0.113.10 port 40861 ssh2
-Jun 26 09:02:40 server sshd[1030]: Failed password for admin from 203.0.113.10 port 48472 ssh2
-Jun 26 09:02:42 server sshd[1031]: Failed password for admin from 203.0.113.10 port 58963 ssh2
-Jun 26 09:02:46 server sshd[1032]: Failed password for admin from 203.0.113.10 port 41838 ssh2
-Jun 26 09:02:51 server sshd[1033]: Failed password for admin from 203.0.113.10 port 37592 ssh2
-Jun 26 09:02:52 server sshd[1034]: Failed password for admin from 203.0.113.10 port 47278 ssh2
-2026-06-26T09:02:55 EVENT_ID=4625 USER=alice IP=10.0.0.8 MESSAGE="An account failed to log on."
-172.16.1.72 - - [26/Jun/2026:09:02:59 +0000] "GET /checkout HTTP/1.1" 200 2874
-172.16.1.11 - - [26/Jun/2026:09:03:05 +0000] "GET /login?id=1 UNION SELECT username,password FROM users HTTP/1.1" 500 777
-2026-06-26T09:03:10 EVENT_ID=4625 USER=guest IP=10.0.0.5 MESSAGE="An account failed to log on."
-172.16.1.76 - - [26/Jun/2026:09:03:16 +0000] "GET /login?id=1%27%20OR%201=1-- HTTP/1.1" 500 635
-Jun 26 09:03:17 server sshd[1035]: Failed password for admin from 203.0.113.10 port 31612 ssh2
-Jun 26 09:03:20 server sshd[1036]: Failed password for admin from 203.0.113.10 port 34874 ssh2
-Jun 26 09:03:26 server sshd[1037]: Failed password for admin from 203.0.113.10 port 47000 ssh2
-Jun 26 09:03:29 server sshd[1038]: Failed password for admin from 203.0.113.10 port 30347 ssh2
-Jun 26 09:03:31 server sshd[1039]: Failed password for admin from 203.0.113.10 port 39430 ssh2
-172.16.1.51 - - [26/Jun/2026:09:03:35 +0000] "GET /login?id=1 UNION SELECT username,password FROM users HTTP/1.1" 500 612
-Jun 26 09:03:38 server sshd[1040]: Failed password for admin from 192.168.1.45 port 33186 ssh2
-172.16.1.61 - - [26/Jun/2026:09:03:43 +0000] "GET /login?id=1%27%20OR%201=1-- HTTP/1.1" 500 314
-Jun 26 09:03:49 server sshd[1041]: Failed password for john from 192.168.1.39 port 52212 ssh2
-Jun 26 09:03:51 server sshd[1042]: Failed password for admin from 203.0.113.10 port 33535 ssh2
-Jun 26 09:03:53 server sshd[1043]: Failed password for admin from 203.0.113.10 port 51128 ssh2
-Jun 26 09:03:57 server sshd[1044]: Failed password for admin from 203.0.113.10 port 39491 ssh2
-Jun 26 09:04:01 server sshd[1045]: Failed password for admin from 203.0.113.10 port 43973 ssh2
-Jun 26 09:04:02 server sshd[1046]: Failed password for admin from 203.0.113.10 port 46718 ssh2
-172.16.1.33 - - [26/Jun/2026:09:04:04 +0000] "GET /login HTTP/1.1" 200 3222
-172.16.1.54 - - [26/Jun/2026:09:04:08 +0000] "GET /profile?name=<svg/onload=alert(1)> HTTP/1.1" 200 426
-172.16.1.41 - - [26/Jun/2026:09:04:11 +0000] "GET /profile?name=<svg/onload=alert(1)> HTTP/1.1" 200 361
-Jun 26 09:04:16 server sshd[1047]: Failed password for admin from 203.0.113.10 port 35978 ssh2
-Jun 26 09:04:17 server sshd[1048]: Failed password for admin from 203.0.113.10 port 56739 ssh2
-Jun 26 09:04:22 server sshd[1049]: Failed password for admin from 203.0.113.10 port 53214 ssh2
-Jun 26 09:04:27 server sshd[1050]: Failed password for admin from 203.0.113.10 port 45769 ssh2
-Jun 26 09:04:33 server sshd[1051]: Failed password for admin from 203.0.113.10 port 59780 ssh2
-172.16.1.73 - - [26/Jun/2026:09:04:37 +0000] "GET /product?id=5;DROP TABLE users HTTP/1.1" 500 651
-Jun 26 09:04:38 server sshd[1052]: Failed password for mike from 192.168.1.35 port 35083 ssh2
-2026-06-26T09:04:39 EVENT_ID=4625 USER=david IP=10.0.0.37 MESSAGE="An account failed to log on."
-Jun 26 09:04:43 server sshd[1053]: Failed password for mike from 192.168.1.44 port 49851 ssh2
-2026-06-26T09:04:46 EVENT_ID=4625 USER=abhishek IP=10.0.0.39 MESSAGE="An account failed to log on."
-Jun 26 09:04:51 server sshd[1054]: Failed password for admin from 203.0.113.10 port 52544 ssh2
-Jun 26 09:04:57 server sshd[1055]: Failed password for admin from 203.0.113.10 port 56273 ssh2
-Jun 26 09:04:58 server sshd[1056]: Failed password for admin from 203.0.113.10 port 30441 ssh2
-Jun 26 09:05:00 server sshd[1057]: Failed password for admin from 203.0.113.10 port 52210 ssh2
-Jun 26 09:05:06 server sshd[1058]: Failed password for admin from 203.0.113.10 port 35760 ssh2
-Jun 26 09:05:08 server sshd[1059]: Failed password for admin from 198.51.100.20 port 33189 ssh2
-Jun 26 09:05:13 server sshd[1060]: Failed password for john from 198.51.100.20 port 44461 ssh2
-Jun 26 09:05:14 server sshd[1061]: Failed password for alice from 198.51.100.20 port 33764 ssh2
-Jun 26 09:05:20 server sshd[1062]: Failed password for mike from 198.51.100.20 port 57589 ssh2
-Jun 26 09:05:22 server sshd[1063]: Failed password for emma from 198.51.100.20 port 43113 ssh2
-172.16.1.68 - - [26/Jun/2026:09:05:24 +0000] "GET /login?id=1 UNION SELECT username,password FROM users HTTP/1.1" 500 534
-2026-06-26T09:05:25 EVENT_ID=4624 USER=root IP=10.0.0.27 MESSAGE="An account was successfully logged on."
-2026-06-26T09:05:27 EVENT_ID=4625 USER=david IP=10.0.0.28 MESSAGE="An account failed to log on."
-Jun 26 09:05:32 server sshd[1064]: Accepted password for mike from 192.168.1.49 port 39843 ssh2
-2026-06-26T09:05:36 EVENT_ID=4625 USER=guest IP=10.0.0.6 MESSAGE="An account failed to log on."
-Jun 26 09:05:39 server sshd[1065]: Failed password for admin from 198.51.100.20 port 52778 ssh2
-Jun 26 09:05:43 server sshd[1066]: Failed password for john from 198.51.100.20 port 47962 ssh2
-Jun 26 09:05:44 server sshd[1067]: Failed password for alice from 198.51.100.20 port 35893 ssh2
-Jun 26 09:05:46 server sshd[1068]: Failed password for mike from 198.51.100.20 port 55161 ssh2
-Jun 26 09:05:49 server sshd[1069]: Failed password for emma from 198.51.100.20 port 44701 ssh2
-Jun 26 09:05:54 server sshd[1070]: Failed password for john from 192.168.1.43 port 31555 ssh2
-2026-06-26T09:05:59 EVENT_ID=4624 USER=john IP=10.0.0.32 MESSAGE="An account was successfully logged on."
+172.16.1.74 - - [26/Jun/2026:09:00:06 +0000] "GET /login?id=1%27%20OR%201=1-- HTTP/1.1" 500 550
+2026-06-26T09:00:12 EVENT_ID=4624 USER=mike IP=10.0.0.28 MESSAGE="An account was successfully logged on."
+2026-06-26T09:00:15 EVENT_ID=4625 USER=root IP=10.0.0.10 MESSAGE="An account failed to log on."
+Jun 26 09:00:18 server sshd[1001]: Accepted password for admin from 192.168.1.13 port 40103 ssh2
+Jun 26 09:00:24 server sshd[1002]: Failed password for admin from 198.51.100.20 port 52566 ssh2
+Jun 26 09:00:25 server sshd[1003]: Failed password for john from 198.51.100.20 port 45476 ssh2
+Jun 26 09:00:31 server sshd[1004]: Failed password for alice from 198.51.100.20 port 50673 ssh2
+Jun 26 09:00:35 server sshd[1005]: Failed password for mike from 198.51.100.20 port 50812 ssh2
+Jun 26 09:00:36 server sshd[1006]: Failed password for emma from 198.51.100.20 port 50746 ssh2
+172.16.1.28 - - [26/Jun/2026:09:00:40 +0000] "GET /products HTTP/1.1" 200 2243
+Jun 26 09:00:42 server sshd[1007]: Failed password for admin from 198.51.100.20 port 30317 ssh2
+Jun 26 09:00:44 server sshd[1008]: Failed password for john from 198.51.100.20 port 42206 ssh2
+Jun 26 09:00:45 server sshd[1009]: Failed password for alice from 198.51.100.20 port 44958 ssh2
+Jun 26 09:00:46 server sshd[1010]: Failed password for mike from 198.51.100.20 port 51152 ssh2
+Jun 26 09:00:52 server sshd[1011]: Failed password for emma from 198.51.100.20 port 35821 ssh2
+172.16.1.62 - - [26/Jun/2026:09:00:53 +0000] "GET /contact HTTP/1.1" 200 4928
+Jun 26 09:00:54 server sshd[1012]: Failed password for john from 192.168.1.27 port 30776 ssh2
+Jun 26 09:00:59 server sshd[1013]: Accepted password for admin from 192.168.1.38 port 54241 ssh2
+2026-06-26T09:01:02 EVENT_ID=4624 USER=alice IP=10.0.0.8 MESSAGE="An account was successfully logged on."
+Jun 26 09:01:04 server sshd[1014]: Failed password for admin from 198.51.100.20 port 33518 ssh2
+Jun 26 09:01:09 server sshd[1015]: Failed password for john from 198.51.100.20 port 33681 ssh2
+Jun 26 09:01:15 server sshd[1016]: Failed password for alice from 198.51.100.20 port 52316 ssh2
+Jun 26 09:01:19 server sshd[1017]: Failed password for mike from 198.51.100.20 port 39090 ssh2
+Jun 26 09:01:21 server sshd[1018]: Failed password for emma from 198.51.100.20 port 42752 ssh2
+172.16.1.63 - - [26/Jun/2026:09:01:25 +0000] "GET /checkout HTTP/1.1" 200 4610
+Jun 26 09:01:28 server sshd[1019]: Failed password for admin from 198.51.100.20 port 33290 ssh2
+Jun 26 09:01:29 server sshd[1020]: Failed password for john from 198.51.100.20 port 36657 ssh2
+Jun 26 09:01:33 server sshd[1021]: Failed password for alice from 198.51.100.20 port 56287 ssh2
+Jun 26 09:01:36 server sshd[1022]: Failed password for mike from 198.51.100.20 port 36932 ssh2
+Jun 26 09:01:42 server sshd[1023]: Failed password for emma from 198.51.100.20 port 58511 ssh2
+2026-06-26T09:01:44 EVENT_ID=4624 USER=guest IP=10.0.0.3 MESSAGE="An account was successfully logged on."
+Jun 26 09:01:49 server sshd[1024]: Failed password for admin from 198.51.100.20 port 56630 ssh2
+Jun 26 09:01:52 server sshd[1025]: Failed password for john from 198.51.100.20 port 49054 ssh2
+Jun 26 09:01:53 server sshd[1026]: Failed password for alice from 198.51.100.20 port 58546 ssh2
+Jun 26 09:01:58 server sshd[1027]: Failed password for mike from 198.51.100.20 port 54079 ssh2
+Jun 26 09:01:59 server sshd[1028]: Failed password for emma from 198.51.100.20 port 48999 ssh2
+Jun 26 09:02:04 server sshd[1029]: Accepted password for emma from 192.168.1.32 port 35170 ssh2
+2026-06-26T09:02:10 EVENT_ID=4624 USER=admin IP=10.0.0.21 MESSAGE="An account was successfully logged on."
+Jun 26 09:02:14 server sshd[1030]: Accepted password for admin from 192.168.1.46 port 44745 ssh2
+2026-06-26T09:02:15 EVENT_ID=4624 USER=john IP=10.0.0.19 MESSAGE="An account was successfully logged on."
+Jun 26 09:02:19 server sshd[1031]: Accepted password for guest from 192.168.1.33 port 30883 ssh2
+Jun 26 09:02:25 server sshd[1032]: Failed password for admin from 198.51.100.20 port 36451 ssh2
+Jun 26 09:02:29 server sshd[1033]: Failed password for john from 198.51.100.20 port 58678 ssh2
+Jun 26 09:02:34 server sshd[1034]: Failed password for alice from 198.51.100.20 port 54044 ssh2
+Jun 26 09:02:36 server sshd[1035]: Failed password for mike from 198.51.100.20 port 48025 ssh2
+Jun 26 09:02:39 server sshd[1036]: Failed password for emma from 198.51.100.20 port 58592 ssh2
+172.16.1.43 - - [26/Jun/2026:09:02:43 +0000] "GET /products HTTP/1.1" 200 2919
+Jun 26 09:02:48 server sshd[1037]: Failed password for abhishek from 192.168.1.29 port 42395 ssh2
+2026-06-26T09:02:53 EVENT_ID=4625 USER=david IP=10.0.0.37 MESSAGE="An account failed to log on."
+Jun 26 09:02:58 server sshd[1038]: Failed password for admin from 198.51.100.20 port 45631 ssh2
+Jun 26 09:03:02 server sshd[1039]: Failed password for john from 198.51.100.20 port 59300 ssh2
+Jun 26 09:03:08 server sshd[1040]: Failed password for alice from 198.51.100.20 port 53583 ssh2
+Jun 26 09:03:13 server sshd[1041]: Failed password for mike from 198.51.100.20 port 46942 ssh2
+Jun 26 09:03:17 server sshd[1042]: Failed password for emma from 198.51.100.20 port 33921 ssh2
+172.16.1.43 - - [26/Jun/2026:09:03:18 +0000] "GET / HTTP/1.1" 200 1831
+Jun 26 09:03:24 server sshd[1043]: Failed password for alice from 192.168.1.10 port 41782 ssh2
+2026-06-26T09:03:25 EVENT_ID=4624 USER=abhishek IP=10.0.0.10 MESSAGE="An account was successfully logged on."
+172.16.1.33 - - [26/Jun/2026:09:03:29 +0000] "GET /login?id=1 UNION SELECT username,password FROM users HTTP/1.1" 500 625
+172.16.1.37 - - [26/Jun/2026:09:03:33 +0000] "GET /product?id=5;DROP TABLE users HTTP/1.1" 500 772
+Jun 26 09:03:34 server sshd[1044]: Failed password for abhishek from 192.168.1.30 port 53123 ssh2
+172.16.1.74 - - [26/Jun/2026:09:03:40 +0000] "GET /product?id=5;DROP TABLE users HTTP/1.1" 500 668
+172.16.1.12 - - [26/Jun/2026:09:03:41 +0000] "GET / HTTP/1.1" 200 3739
+Jun 26 09:03:43 server sshd[1045]: Failed password for admin from 198.51.100.20 port 44639 ssh2
+Jun 26 09:03:47 server sshd[1046]: Failed password for john from 198.51.100.20 port 50263 ssh2
+Jun 26 09:03:52 server sshd[1047]: Failed password for alice from 198.51.100.20 port 54346 ssh2
+Jun 26 09:03:57 server sshd[1048]: Failed password for mike from 198.51.100.20 port 36096 ssh2
+Jun 26 09:04:03 server sshd[1049]: Failed password for emma from 198.51.100.20 port 55270 ssh2
+Jun 26 09:04:05 server sshd[1050]: Failed password for admin from 198.51.100.20 port 31828 ssh2
+Jun 26 09:04:09 server sshd[1051]: Failed password for john from 198.51.100.20 port 35296 ssh2
+Jun 26 09:04:11 server sshd[1052]: Failed password for alice from 198.51.100.20 port 50705 ssh2
+Jun 26 09:04:15 server sshd[1053]: Failed password for mike from 198.51.100.20 port 42576 ssh2
+Jun 26 09:04:17 server sshd[1054]: Failed password for emma from 198.51.100.20 port 55420 ssh2
+172.16.1.26 - - [26/Jun/2026:09:04:21 +0000] "GET /cart HTTP/1.1" 200 1343
+172.16.1.27 - - [26/Jun/2026:09:04:23 +0000] "GET /about HTTP/1.1" 200 975
+172.16.1.39 - - [26/Jun/2026:09:04:26 +0000] "GET /comment?msg=<img src=x onerror=alert(1)> HTTP/1.1" 200 444
+Jun 26 09:04:31 server sshd[1055]: Accepted password for guest from 192.168.1.53 port 41378 ssh2
+2026-06-26T09:04:37 EVENT_ID=4625 USER=john IP=10.0.0.34 MESSAGE="An account failed to log on."
+172.16.1.12 - - [26/Jun/2026:09:04:40 +0000] "GET /login?id=1 UNION SELECT username,password FROM users HTTP/1.1" 500 386
+172.16.1.11 - - [26/Jun/2026:09:04:44 +0000] "GET /product?id=5;DROP TABLE users HTTP/1.1" 500 427
+Jun 26 09:04:49 server sshd[1056]: Failed password for admin from 203.0.113.10 port 50003 ssh2
+Jun 26 09:04:50 server sshd[1057]: Failed password for admin from 203.0.113.10 port 59086 ssh2
+Jun 26 09:04:51 server sshd[1058]: Failed password for admin from 203.0.113.10 port 48820 ssh2
+Jun 26 09:04:53 server sshd[1059]: Failed password for admin from 203.0.113.10 port 38526 ssh2
+Jun 26 09:04:59 server sshd[1060]: Failed password for admin from 203.0.113.10 port 44416 ssh2
+Jun 26 09:05:05 server sshd[1061]: Failed password for admin from 203.0.113.10 port 35513 ssh2
+Jun 26 09:05:10 server sshd[1062]: Failed password for admin from 203.0.113.10 port 42639 ssh2
+Jun 26 09:05:11 server sshd[1063]: Failed password for admin from 203.0.113.10 port 41569 ssh2
+Jun 26 09:05:16 server sshd[1064]: Failed password for admin from 203.0.113.10 port 57387 ssh2
+Jun 26 09:05:18 server sshd[1065]: Failed password for admin from 203.0.113.10 port 43242 ssh2
+Jun 26 09:05:24 server sshd[1066]: Accepted password for john from 192.168.1.42 port 52946 ssh2
+172.16.1.53 - - [26/Jun/2026:09:05:28 +0000] "GET /login?id=1%27%20OR%201=1-- HTTP/1.1" 500 451
+172.16.1.28 - - [26/Jun/2026:09:05:32 +0000] "GET /contact HTTP/1.1" 200 909
+2026-06-26T09:05:36 EVENT_ID=4625 USER=mike IP=10.0.0.12 MESSAGE="An account failed to log on."
+Jun 26 09:05:41 server sshd[1067]: Failed password for emma from 192.168.1.49 port 39579 ssh2
+Jun 26 09:05:44 server sshd[1068]: Failed password for alice from 192.168.1.40 port 43727 ssh2
+172.16.1.59 - - [26/Jun/2026:09:05:46 +0000] "GET /products HTTP/1.1" 200 4659
+Jun 26 09:05:50 server sshd[1069]: Failed password for guest from 192.168.1.20 port 38109 ssh2
+Jun 26 09:05:56 server sshd[1070]: Failed password for guest from 192.168.1.24 port 55876 ssh2
+2026-06-26T09:05:58 EVENT_ID=4624 USER=abhishek IP=10.0.0.3 MESSAGE="An account was successfully logged on."
+172.16.1.51 - - [26/Jun/2026:09:06:03 +0000] "GET /cart HTTP/1.1" 200 2720
