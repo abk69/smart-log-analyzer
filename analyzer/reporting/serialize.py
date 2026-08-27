@@ -6,10 +6,11 @@ from collections import Counter
 from datetime import datetime
 from typing import Any
 
+from analyzer import __version__
 from analyzer.models import AnalysisResult, Incident, SecurityAlert
 
 APP_NAME = "Smart Log Analyzer"
-APP_VERSION = "0.8.0"
+APP_VERSION = __version__
 
 
 def to_iso(value: datetime | None) -> str | None:

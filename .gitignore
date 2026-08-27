@@ -3,20 +3,26 @@ __pycache__/
 *.pyo
 *.pyd
 
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
 .venv/
+.venv*/
 venv/
 env/
 
-.vscode/
+.env
 
-reports/*.csv
-reports/*.json
-reports/*.html
-reports/*.txt
+.vscode/
+.idea/
 
 .DS_Store
 
-.coverage
-htmlcov/
-.ruff_cache/
-reports/_benchmark/
+# Generated logs (keep directory via .gitkeep)
+logs/*.log
+
+# Generated reports (keep directory via .gitkeep)
+reports/*
+!reports/.gitkeep

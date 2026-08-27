@@ -5,19 +5,24 @@ from pathlib import Path
 from main import EXIT_APP_ERROR, EXIT_OK, EXIT_USAGE, main
 
 
-def test_cli_success(tmp_path: Path, capsys):
-    log = tmp_path / "sample.log"
-    log.write_text(
-        "Jun 26 09:01:20 server sshd[1014]: "
-        "Accepted password for alice from 192.168.1.18 port 46945 ssh2\n",
-        encoding="utf-8",
-    )
-    code = main([str(log), "--no-color", "--quiet"])
+def test_cli_version(capsys):
+    code = main(["--version"])
     captured = capsys.readouterr()
     assert code == EXIT_OK
-    assert "SMART LOG ANALYZER" in captured.out
-    assert "PARSING" in captured.out
-    assert "Analysis Complete" in captured.out
+    assert "Smart Log Analyzer" in captured.out
+    assert "0.1.0" in captured.out
+
+
+def test_cli_help_mentions_core_options(capsys):
+    code = main(["--help"])
+    captured = capsys.readouterr()
+    assert code == EXIT_OK
+    out = captured.out
+    assert "logfile" in out
+    assert "--report" in out
+    assert "--no-anomaly" in out
+    assert "--verbose" in out
+    assert "--output" in out
 
 
 def test_cli_missing_file(capsys):

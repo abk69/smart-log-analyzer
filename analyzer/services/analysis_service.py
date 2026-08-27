@@ -10,9 +10,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from analyzer.anomaly import detect_anomalies
 from analyzer.config import AnalyzerConfig, DEFAULT_CONFIG
 from analyzer.correlation import correlate_alerts
-from analyzer.anomaly import detect_anomalies
 from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.impossible_travel import detect_impossible_travel
 from analyzer.detectors.insider_threat import detect_insider_threat

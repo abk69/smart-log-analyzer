@@ -1,4 +1,4 @@
-# Lightweight lint config for Smart Log Analyzer (M9).
+# Lightweight lint config for Smart Log Analyzer.
 # Run: ruff check analyzer tests main.py tools
 
 target-version = "py311"
@@ -13,6 +13,7 @@ select = [
 ]
 ignore = [
     "E501",  # line length handled separately; avoid mass rewrites
+    "I001",  # isort deferred — avoid churn across existing modules
 ]
 
 [lint.per-file-ignores]

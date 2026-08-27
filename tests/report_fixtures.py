@@ -1,7 +1,5 @@
 """Shared fixtures/helpers for reporting tests."""
 
-from datetime import datetime
-
 from analyzer.config import AnalyzerConfig
 from analyzer.models import AnalysisResult
 from analyzer.services.analysis_service import AnalysisService

@@ -1,6 +1,11 @@
 """Application configuration for detector thresholds and defaults.
 
-Uses standard-library dataclasses only.
+Uses standard-library dataclasses only (no YAML). Override at runtime via
+``dataclasses.replace`` (see CLI ``--no-anomaly``) or construct a custom
+``AnalyzerConfig`` when embedding ``AnalysisService``.
+
+Each detector/analytics block has an ``enabled`` flag. Numeric thresholds
+live here rather than as scattered magic numbers in detector modules.
 """
 
 from __future__ import annotations

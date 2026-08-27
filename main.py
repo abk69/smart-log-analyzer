@@ -12,6 +12,7 @@ from collections import Counter
 from dataclasses import replace
 from pathlib import Path
 
+from analyzer import __version__
 from analyzer.anomaly import SKLEARN_AVAILABLE
 from analyzer.config import AnalyzerConfig
 from analyzer.exceptions import (
@@ -200,9 +201,30 @@ def _print_report_paths(paths: dict[str, Path], style: _Style) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="main.py",
-        description="Smart Log Analyzer — SIEM-inspired security log analytics",
+        description=(
+            "Smart Log Analyzer - parse heterogeneous security logs, detect "
+            "known attacks, optionally flag behavioral anomalies, correlate "
+            "alerts, score risk, and write local reports."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "examples:\n"
+            "  python main.py logs/security.log\n"
+            "  python main.py logs/security.log --verbose\n"
+            "  python main.py logs/security.log --no-anomaly\n"
+            "  python main.py logs/security.log --report all\n"
+            "  python main.py logs/security.log --report all --output reports/\n"
+            "\n"
+            "Log lines are treated as data only (never executed). Analysis is\n"
+            "local/offline - no external APIs or automated blocking."
+        ),
     )
-    parser.add_argument("logfile", help="Path to the security log file")
+    parser.add_argument("logfile", help="Path to the security log file to analyze")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"Smart Log Analyzer {__version__}",
+    )
     parser.add_argument(
         "--verbose",
         action="store_true",
@@ -223,18 +245,26 @@ def build_parser() -> argparse.ArgumentParser:
         choices=["json", "csv", "html", "summary", "all"],
         action="append",
         default=None,
-        help="Generate report artifact(s). Repeatable. Use 'all' for every format.",
+        metavar="KIND",
+        help=(
+            "Generate report artifact(s): json, csv, html, summary, or all. "
+            "Repeatable. Writes under --output."
+        ),
     )
     parser.add_argument(
         "--format",
         choices=["console", "json", "csv", "html", "summary", "all"],
         default="console",
-        help="Console display mode, or alias for --report when not console",
+        help=(
+            "Console display mode (default: console). Non-console values are "
+            "aliases for --report"
+        ),
     )
     parser.add_argument(
         "--output",
         type=Path,
         default=Path("reports"),
+        metavar="DIR",
         help="Output directory for generated reports (default: reports/)",
     )
     parser.add_argument(
