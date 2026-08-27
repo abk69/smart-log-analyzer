@@ -147,3 +147,22 @@ def test_cli_empty_file_with_reports(tmp_path: Path):
     assert (out / "security_report.json").exists()
     assert (out / "security_report.html").exists()
     assert (out / "summary.txt").exists()
+
+
+def test_cli_no_anomaly_still_detects_brute_force(tmp_path: Path):
+    log = tmp_path / "bf.log"
+    log.write_text(
+        "\n".join(
+            [
+                "Jun 26 09:02:01 server sshd[1020]: Failed password for admin from 203.0.113.10 port 53769 ssh2",
+                "Jun 26 09:02:07 server sshd[1021]: Failed password for admin from 203.0.113.10 port 50490 ssh2",
+                "Jun 26 09:02:11 server sshd[1022]: Failed password for admin from 203.0.113.10 port 59221 ssh2",
+                "Jun 26 09:02:15 server sshd[1023]: Failed password for admin from 203.0.113.10 port 52800 ssh2",
+                "Jun 26 09:02:21 server sshd[1024]: Failed password for admin from 203.0.113.10 port 42959 ssh2",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    code = main([str(log), "--no-color", "--quiet", "--no-anomaly"])
+    assert code == EXIT_OK

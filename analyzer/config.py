@@ -116,6 +116,28 @@ class RiskScoringConfig:
 
 
 @dataclass(frozen=True)
+class AnomalyConfig:
+    """Optional Isolation Forest behavioral anomaly settings.
+
+    Anomalies indicate statistically unusual behavior within the analyzed
+    dataset — not confirmed attacks. Features are derived only from raw
+    ``LogEntry`` fields (no detector-output leakage).
+    """
+
+    enabled: bool = True
+    contamination: float = 0.05
+    n_estimators: int = 100
+    random_state: int = 42
+    minimum_samples: int = 20
+    # Heuristic 0–100 anomaly score threshold (higher = more anomalous).
+    alert_threshold: float = 70.0
+    unusual_hour_start: int = 0
+    unusual_hour_end: int = 5
+    # Extract per-IP vectors always; optionally also per-user vectors.
+    include_user_entities: bool = True
+
+
+@dataclass(frozen=True)
 class AnalyzerConfig:
     """Top-level configuration container for the analyzer."""
 
@@ -127,6 +149,7 @@ class AnalyzerConfig:
         default_factory=ImpossibleTravelConfig
     )
     insider_threat: InsiderThreatConfig = field(default_factory=InsiderThreatConfig)
+    anomaly: AnomalyConfig = field(default_factory=AnomalyConfig)
     correlation: CorrelationConfig = field(default_factory=CorrelationConfig)
     risk_scoring: RiskScoringConfig = field(default_factory=RiskScoringConfig)
     # Year used when a log format omits it (e.g. syslog).

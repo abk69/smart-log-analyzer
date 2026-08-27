@@ -9,8 +9,11 @@ from __future__ import annotations
 import argparse
 import sys
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
 
+from analyzer.anomaly import SKLEARN_AVAILABLE
+from analyzer.config import AnalyzerConfig
 from analyzer.exceptions import (
     ConfigurationError,
     LogAnalyzerError,
@@ -234,6 +237,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("reports"),
         help="Output directory for generated reports (default: reports/)",
     )
+    parser.add_argument(
+        "--no-anomaly",
+        action="store_true",
+        help=(
+            "Disable Isolation Forest anomaly detection "
+            "(deterministic detectors still run)"
+        ),
+    )
     return parser
 
 
@@ -275,7 +286,18 @@ def main(argv: list[str] | None = None) -> int:
     use_color = (not args.no_color) and sys.stdout.isatty()
     style = _Style(enabled=use_color)
 
-    service = AnalysisService()
+    config = AnalyzerConfig()
+    if args.no_anomaly:
+        config = replace(config, anomaly=replace(config.anomaly, enabled=False))
+
+    if config.anomaly.enabled and not SKLEARN_AVAILABLE:
+        print(
+            "Note: anomaly detection unavailable (scikit-learn not installed). "
+            "Continuing with deterministic detectors only.",
+            file=sys.stderr,
+        )
+
+    service = AnalysisService(config=config)
     try:
         result = service.analyze_file(args.logfile)
     except LogFileError as exc:

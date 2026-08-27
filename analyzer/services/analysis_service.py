@@ -12,6 +12,7 @@ from typing import Any
 
 from analyzer.config import AnalyzerConfig, DEFAULT_CONFIG
 from analyzer.correlation import correlate_alerts
+from analyzer.anomaly import detect_anomalies
 from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.impossible_travel import detect_impossible_travel
 from analyzer.detectors.insider_threat import detect_insider_threat
@@ -160,6 +161,16 @@ class AnalysisService:
             logger.info("Detector %s produced %s alert(s)", spec.name, len(found))
             alerts.extend(found)
 
+        if self.config.anomaly.enabled:
+            logger.info("Running optional anomaly detection")
+            anomaly_alerts = detect_anomalies(entries, config=self.config)
+            logger.info(
+                "Anomaly detector produced %s alert(s)", len(anomaly_alerts)
+            )
+            alerts.extend(anomaly_alerts)
+        else:
+            logger.info("Skipping anomaly detection (disabled)")
+
         alerts = deduplicate_alerts(alerts)
         logger.info("Collected %s unique alert(s)", len(alerts))
 
@@ -198,6 +209,9 @@ class AnalysisService:
                 continue
             found = spec.detect(entries, self.config)  # type: ignore[call-arg]
             alerts.extend(found)
+
+        if self.config.anomaly.enabled:
+            alerts.extend(detect_anomalies(entries, config=self.config))
 
         alerts = deduplicate_alerts(alerts)
         incidents = self._score_fn(

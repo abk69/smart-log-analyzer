@@ -21,6 +21,8 @@ if str(ROOT) not in sys.path:
 
 from analyzer.config import AnalyzerConfig
 from analyzer.correlation import correlate_alerts
+from analyzer.anomaly.features import extract_feature_vectors
+from analyzer.anomaly.isolation_forest import detect_anomalies
 from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.password_spray import detect_password_spray
 from analyzer.detectors.sql_injection import detect_sql_injection
@@ -96,6 +98,12 @@ def main() -> None:
         return alerts
 
     detect_time, alerts = _timeit("detection", _detect)
+    _timeit("feature extraction", lambda: extract_feature_vectors(entries, config=cfg.anomaly))
+    anomaly_time, anomaly_alerts = _timeit(
+        "anomaly (IsolationForest)",
+        lambda: detect_anomalies(entries, config=cfg),
+    )
+    alerts = list(alerts) + list(anomaly_alerts)
     corr_time, incidents = _timeit("correlation", lambda: correlate_alerts(alerts, config=cfg))
     _timeit("risk scoring", lambda: score_incidents(incidents, config=cfg))
 
@@ -117,6 +125,7 @@ def main() -> None:
     print(
         "Note: timings are local and approximate; "
         f"parse={parse_time:.3f}s detect={detect_time:.3f}s "
+        f"anomaly={anomaly_time:.3f}s "
         f"corr={corr_time:.3f}s reports={report_time:.3f}s "
         f"total={total_time:.3f}s"
     )

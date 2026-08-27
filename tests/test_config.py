@@ -50,6 +50,15 @@ def test_default_config_correlation_and_risk():
     assert DEFAULT_CONFIG.risk_scoring.base_critical == 90
 
 
+def test_default_config_anomaly():
+    assert DEFAULT_CONFIG.anomaly.enabled is True
+    assert DEFAULT_CONFIG.anomaly.contamination == 0.05
+    assert DEFAULT_CONFIG.anomaly.n_estimators == 100
+    assert DEFAULT_CONFIG.anomaly.random_state == 42
+    assert DEFAULT_CONFIG.anomaly.minimum_samples == 20
+    assert DEFAULT_CONFIG.anomaly.alert_threshold == 70.0
+
+
 def test_default_log_year_is_current_not_hardcoded_2026():
     config = AnalyzerConfig()
     assert config.default_log_year == datetime.now().year
