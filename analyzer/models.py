@@ -84,3 +84,22 @@ class Incident:
     alerts: list[SecurityAlert] = field(default_factory=list)
     evidence: dict[str, Any] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class AnalysisResult:
+    """Complete output of one analysis run.
+
+    Designed for CLI display now and report serialization in a later
+    milestone. ``parse_stats`` is a plain dict for easy serialization.
+    """
+
+    input_file: str
+    analyzed_at: datetime
+    duration_seconds: float
+    log_count: int
+    parse_stats: dict[str, Any]
+    statistics: dict[str, Any]
+    alerts: list[SecurityAlert] = field(default_factory=list)
+    incidents: list[Incident] = field(default_factory=list)
+    logs: list[LogEntry] = field(default_factory=list)
