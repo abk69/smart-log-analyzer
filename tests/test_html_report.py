@@ -22,6 +22,8 @@ def test_html_report_standalone(tmp_path: Path):
     assert "BRUTE_FORCE" in content or "SQL_INJECTION" in content
     assert "Security Incidents" in content
     assert "View Evidence" in content
+    assert "Executive Summary" in content or "SECURITY POSTURE" in content or "Security Posture" in content
+    assert "Log Overview" in content
 
 
 def test_html_escaping(tmp_path: Path):
