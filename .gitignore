@@ -11,5 +11,7 @@ env/
 
 reports/*.csv
 reports/*.json
+reports/*.html
+reports/*.txt
 
 .DS_Store

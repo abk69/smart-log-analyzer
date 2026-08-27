@@ -1,7 +1,7 @@
 """Smart Log Analyzer CLI entry point.
 
 Orchestration lives in ``AnalysisService``. This module handles argparse,
-presentation, and exit codes only.
+presentation, reporting invocation, and exit codes only.
 """
 
 from __future__ import annotations
@@ -11,8 +11,14 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from analyzer.exceptions import ConfigurationError, LogAnalyzerError, LogFileError
+from analyzer.exceptions import (
+    ConfigurationError,
+    LogAnalyzerError,
+    LogFileError,
+    ReportGenerationError,
+)
 from analyzer.models import AnalysisResult, Incident, SecurityAlert
+from analyzer.reporting import generate_reports
 from analyzer.services.analysis_service import AnalysisService
 from analyzer.utils import setup_logging
 
@@ -20,8 +26,6 @@ from analyzer.utils import setup_logging
 EXIT_OK = 0
 EXIT_APP_ERROR = 1
 EXIT_USAGE = 2
-
-FUTURE_REPORT_FORMATS = {"json", "csv", "html"}
 
 
 class _Style:
@@ -172,6 +176,24 @@ def _print_summary(result: AnalysisResult, *, quiet: bool, style: _Style) -> Non
         print(f"  {incident.description}")
 
 
+def _print_report_paths(paths: dict[str, Path], style: _Style) -> None:
+    if not paths:
+        return
+    labels = {
+        "json": "JSON",
+        "alerts_csv": "CSV",
+        "incidents_csv": "CSV",
+        "html": "HTML",
+        "summary": "SUMMARY",
+    }
+    print()
+    print(style.bold("REPORTS"))
+    print("-" * 60)
+    for key, path in paths.items():
+        label = labels.get(key, key.upper())
+        print(f"{label:<10}: {path}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="main.py",
@@ -194,18 +216,41 @@ def build_parser() -> argparse.ArgumentParser:
         help="Disable ANSI color in console output",
     )
     parser.add_argument(
+        "--report",
+        choices=["json", "csv", "html", "summary", "all"],
+        action="append",
+        default=None,
+        help="Generate report artifact(s). Repeatable. Use 'all' for every format.",
+    )
+    parser.add_argument(
         "--format",
-        choices=["console", "json", "csv", "html"],
+        choices=["console", "json", "csv", "html", "summary", "all"],
         default="console",
-        help="Output format (json/csv/html reserved for future reporting)",
+        help="Console display mode, or alias for --report when not console",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=None,
-        help="Output directory/file for future report generation",
+        default=Path("reports"),
+        help="Output directory for generated reports (default: reports/)",
     )
     return parser
+
+
+def _resolve_report_kinds(args: argparse.Namespace) -> list[str]:
+    kinds: list[str] = []
+    if args.report:
+        kinds.extend(args.report)
+    if args.format and args.format != "console":
+        kinds.append(args.format)
+    # Preserve order while deduplicating.
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for kind in kinds:
+        if kind not in seen:
+            seen.add(kind)
+            ordered.append(kind)
+    return ordered
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -230,17 +275,6 @@ def main(argv: list[str] | None = None) -> int:
     use_color = (not args.no_color) and sys.stdout.isatty()
     style = _Style(enabled=use_color)
 
-    if args.format in FUTURE_REPORT_FORMATS:
-        print(
-            f"Note: --format {args.format} is reserved for a future reporting "
-            "milestone; showing console summary."
-        )
-    if args.output is not None:
-        print(
-            f"Note: --output {args.output} is reserved for a future reporting "
-            "milestone; no report file will be written."
-        )
-
     service = AnalysisService()
     try:
         result = service.analyze_file(args.logfile)
@@ -256,6 +290,19 @@ def main(argv: list[str] | None = None) -> int:
 
     _print_banner(style)
     _print_summary(result, quiet=args.quiet, style=style)
+
+    report_kinds = _resolve_report_kinds(args)
+    if report_kinds:
+        try:
+            written = generate_reports(
+                result,
+                args.output,
+                kinds=report_kinds,
+            )
+        except ReportGenerationError as exc:
+            print(f"Report error: {exc}", file=sys.stderr)
+            return EXIT_APP_ERROR
+        _print_report_paths(written, style)
 
     print()
     print("=" * 60)
