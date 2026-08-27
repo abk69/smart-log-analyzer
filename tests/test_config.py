@@ -42,6 +42,14 @@ def test_default_config_impossible_travel():
     assert DEFAULT_CONFIG.impossible_travel.max_plausible_speed_kmh == 900.0
 
 
+def test_default_config_correlation_and_risk():
+    assert DEFAULT_CONFIG.correlation.enabled is True
+    assert DEFAULT_CONFIG.correlation.window_seconds == 300
+    assert DEFAULT_CONFIG.risk_scoring.enabled is True
+    assert DEFAULT_CONFIG.risk_scoring.base_high == 70
+    assert DEFAULT_CONFIG.risk_scoring.base_critical == 90
+
+
 def test_default_log_year_is_current_not_hardcoded_2026():
     config = AnalyzerConfig()
     assert config.default_log_year == datetime.now().year

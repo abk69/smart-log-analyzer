@@ -83,6 +83,39 @@ class InsiderThreatConfig:
 
 
 @dataclass(frozen=True)
+class CorrelationConfig:
+    """Alert correlation settings.
+
+    Alerts sharing an IP or username can join the same incident when they
+    fall within ``window_seconds`` of a neighboring alert in that group
+    (time-ordered chaining).
+    """
+
+    enabled: bool = True
+    window_seconds: int = 300
+    correlate_by_ip: bool = True
+    correlate_by_user: bool = True
+
+
+@dataclass(frozen=True)
+class RiskScoringConfig:
+    """Global incident risk-scoring settings (separate from detector-local scores)."""
+
+    enabled: bool = True
+    base_low: int = 20
+    base_medium: int = 40
+    base_high: int = 70
+    base_critical: int = 90
+    multiple_alert_bonus: int = 10
+    multiple_attack_type_bonus: int = 10
+    repeated_activity_bonus: int = 5
+    privileged_user_bonus: int = 5
+    high_confidence_bonus: int = 3
+    high_confidence_threshold: float = 0.85
+    privileged_users: tuple[str, ...] = ("admin", "root", "administrator")
+
+
+@dataclass(frozen=True)
 class AnalyzerConfig:
     """Top-level configuration container for the analyzer."""
 
@@ -94,6 +127,8 @@ class AnalyzerConfig:
         default_factory=ImpossibleTravelConfig
     )
     insider_threat: InsiderThreatConfig = field(default_factory=InsiderThreatConfig)
+    correlation: CorrelationConfig = field(default_factory=CorrelationConfig)
+    risk_scoring: RiskScoringConfig = field(default_factory=RiskScoringConfig)
     # Year used when a log format omits it (e.g. syslog).
     default_log_year: int = field(default_factory=lambda: datetime.now().year)
     default_timezone: str = "UTC"

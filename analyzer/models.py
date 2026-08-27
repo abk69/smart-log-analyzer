@@ -60,3 +60,27 @@ class SecurityAlert:
     confidence: float = 0.0
     risk_score: int = 0
     metadata: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class Incident:
+    """Correlated group of related ``SecurityAlert`` findings.
+
+    ``incident_id`` is assigned once at construction. ``alerts`` holds
+    references to the contributing alert objects; ``alert_ids`` mirrors
+    their identifiers for convenient serialization.
+    """
+
+    incident_type: str
+    severity: str
+    first_seen: datetime
+    last_seen: datetime
+    description: str
+    incident_id: str = field(default_factory=lambda: str(uuid4()))
+    risk_score: int = 0
+    source_ips: list[str] = field(default_factory=list)
+    usernames: list[str] = field(default_factory=list)
+    alert_ids: list[str] = field(default_factory=list)
+    alerts: list[SecurityAlert] = field(default_factory=list)
+    evidence: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
