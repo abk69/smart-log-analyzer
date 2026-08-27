@@ -56,7 +56,7 @@ class SecurityAlert:
     description: str
     alert_id: str = field(default_factory=lambda: str(uuid4()))
     source: str = ""
-    evidence: list[str] = field(default_factory=list)
+    evidence: Any = field(default_factory=list)
     confidence: float = 0.0
     risk_score: int = 0
     metadata: dict[str, Any] = field(default_factory=dict)

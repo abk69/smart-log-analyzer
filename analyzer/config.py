@@ -15,6 +15,7 @@ from datetime import datetime
 class BruteForceConfig:
     """Thresholds for same-user / same-IP failed login bursts."""
 
+    enabled: bool = True
     failed_attempt_threshold: int = 5
     window_seconds: int = 120
 
@@ -23,6 +24,7 @@ class BruteForceConfig:
 class PasswordSprayConfig:
     """Thresholds for multi-username failed login from one IP."""
 
+    enabled: bool = True
     unique_user_threshold: int = 5
     window_seconds: int = 120
 

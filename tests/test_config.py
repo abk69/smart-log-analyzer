@@ -13,11 +13,13 @@ from analyzer.exceptions import (
 
 
 def test_default_config_brute_force_thresholds():
+    assert DEFAULT_CONFIG.brute_force.enabled is True
     assert DEFAULT_CONFIG.brute_force.failed_attempt_threshold == 5
     assert DEFAULT_CONFIG.brute_force.window_seconds == 120
 
 
 def test_default_config_password_spray_thresholds():
+    assert DEFAULT_CONFIG.password_spray.enabled is True
     assert DEFAULT_CONFIG.password_spray.unique_user_threshold == 5
     assert DEFAULT_CONFIG.password_spray.window_seconds == 120
 
