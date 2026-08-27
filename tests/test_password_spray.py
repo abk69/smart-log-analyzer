@@ -151,3 +151,59 @@ def test_overlapping_windows_collapsed():
     alerts = detect_password_spray(logs)
     assert len(alerts) == 1
     assert alerts[0].evidence["unique_users"] == 8
+
+
+def test_above_threshold_still_one_alert():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    users = [f"user{i}" for i in range(6)]
+    logs = [
+        _failed(user, "198.51.100.20", start + timedelta(seconds=i * 5))
+        for i, user in enumerate(users)
+    ]
+    alerts = detect_password_spray(logs)
+    assert len(alerts) == 1
+    assert alerts[0].evidence["unique_users"] == 6
+
+
+def test_out_of_order_timestamps():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    users = ["admin", "john", "alice", "mike", "emma"]
+    # Deliberately shuffled order
+    order = [3, 0, 4, 1, 2]
+    logs = [
+        _failed(users[i], "198.51.100.20", start + timedelta(seconds=i * 10))
+        for i in order
+    ]
+    alerts = detect_password_spray(logs)
+    assert len(alerts) == 1
+    assert alerts[0].evidence["unique_users"] == 5
+
+
+def test_duplicate_events():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    users = ["admin", "john", "alice", "mike", "emma"]
+    logs = [
+        _failed(user, "198.51.100.20", start + timedelta(seconds=i * 5))
+        for i, user in enumerate(users)
+    ]
+    # Duplicate the first event — still one spray alert
+    logs.append(_failed("admin", "198.51.100.20", start))
+    alerts = detect_password_spray(logs)
+    assert len(alerts) == 1
+
+
+def test_two_independent_spray_bursts():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    first_users = ["a1", "a2", "a3", "a4", "a5"]
+    first = [
+        _failed(user, "198.51.100.20", start + timedelta(seconds=i * 5))
+        for i, user in enumerate(first_users)
+    ]
+    second_start = start + timedelta(seconds=200)
+    second_users = ["b1", "b2", "b3", "b4", "b5"]
+    second = [
+        _failed(user, "198.51.100.20", second_start + timedelta(seconds=i * 5))
+        for i, user in enumerate(second_users)
+    ]
+    alerts = detect_password_spray(first + second)
+    assert len(alerts) == 2

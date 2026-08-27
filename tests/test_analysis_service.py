@@ -136,3 +136,41 @@ def test_result_contains_statistics_keys():
         "http_requests",
     ):
         assert key in result.statistics
+
+
+def test_fixture_file_pipeline(tmp_path: Path):
+    fixture = Path(__file__).parent / "fixtures" / "mixed_malformed.log"
+    result = AnalysisService(
+        config=AnalyzerConfig(default_log_year=2026)
+    ).analyze_file(fixture)
+
+    assert result.log_count >= 4
+    assert result.parse_stats["malformed_lines"] >= 2
+    assert result.parse_stats["unsupported_lines"] >= 1
+    assert result.statistics["total_logs"] == result.log_count
+    assert any(a.alert_type == "SQL_INJECTION" for a in result.alerts)
+    assert len(result.incidents) >= 1
+    assert all(0 <= i.risk_score <= 100 for i in result.incidents)
+
+
+def test_empty_result_reports_valid(tmp_path: Path):
+    from analyzer.reporting import generate_reports
+
+    empty = tmp_path / "empty.log"
+    empty.write_text("", encoding="utf-8")
+    result = AnalysisService().analyze_file(empty)
+    written = generate_reports(result, tmp_path / "out", kinds=["all"])
+    assert result.log_count == 0
+    assert result.alerts == []
+    assert result.incidents == []
+    assert written["json"].exists()
+    assert written["html"].exists()
+    assert written["summary"].exists()
+
+
+def test_unknown_fixture_file():
+    fixture = Path(__file__).parent / "fixtures" / "unknown_only.log"
+    result = AnalysisService().analyze_file(fixture)
+    assert result.log_count == 0
+    assert result.parse_stats["unsupported_lines"] >= 3
+    assert result.alerts == []

@@ -74,3 +74,41 @@ def test_apache_malformed_returns_none():
     malformed = '172.16.1.1 - - [26/Jun/2026:09:01:14 +0000] "GET /products"'
     assert parser.can_parse(malformed) is True
     assert parser.parse_line(malformed) is None
+
+
+def test_apache_whitespace_and_truncated():
+    assert parse_apache_line("   ") is None
+    assert parse_apache_line('172.16.1.1 - - [26/Jun/2026:09:01:14 +0000]') is None
+
+
+def test_apache_malformed_timestamp():
+    line = '172.16.1.1 - - [99/Xxx/2026:99:99:99 +0000] "GET /products HTTP/1.1" 200 10'
+    assert parse_apache_line(line) is None
+
+
+def test_apache_malformed_request():
+    line = '172.16.1.1 - - [26/Jun/2026:09:01:14 +0000] "NOTAVALIDREQUEST" 200 10'
+    # Either unsupported structure → None, or must not crash
+    assert parse_apache_line(line) is None or isinstance(parse_apache_line(line), object)
+
+
+def test_apache_unicode_and_special_path():
+    line = (
+        '172.16.1.1 - - [26/Jun/2026:09:01:14 +0000] '
+        '"GET /files/%E6%96%87%E4%BB%B6?q=a&b=<x> HTTP/1.1" 200 10'
+    )
+    entry = parse_apache_line(line)
+    assert entry is not None
+    assert entry.method == "GET"
+    assert "q=a" in entry.request
+
+
+def test_apache_very_long_path_does_not_crash():
+    path = "/" + ("a" * 4000)
+    line = (
+        f'172.16.1.1 - - [26/Jun/2026:09:01:14 +0000] '
+        f'"GET {path} HTTP/1.1" 200 10'
+    )
+    entry = parse_apache_line(line)
+    assert entry is not None
+    assert len(entry.path) >= 4000

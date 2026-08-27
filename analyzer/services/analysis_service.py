@@ -18,7 +18,6 @@ from analyzer.detectors.insider_threat import detect_insider_threat
 from analyzer.detectors.password_spray import detect_password_spray
 from analyzer.detectors.sql_injection import detect_sql_injection
 from analyzer.detectors.xss import detect_xss
-from analyzer.exceptions import LogFileError
 from analyzer.models import AnalysisResult, LogEntry, SecurityAlert
 from analyzer.parser import read_log_file
 from analyzer.parsers.parser_dispatcher import ParseStats, parse_logs_with_stats

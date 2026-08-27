@@ -1,0 +1,9 @@
+Jun 26 09:01:20 server sshd[1014]: Accepted password for alice from 192.168.1.18 port 46945 ssh2
+Jun 26 09:01:20 server sshd[1014]: something broken and truncated
+2026-06-26T09:00:25 EVENT_ID=4624 USER=bob IP=10.0.0.16 MESSAGE="ok"
+2026-06-26T09:00:25 EVENT_ID=9999 USER=admin IP=10.0.0.1
+172.16.1.73 - - [26/Jun/2026:09:01:14 +0000] "GET /products HTTP/1.1" 200 342
+172.16.1.1 - - [26/Jun/2026:09:01:14 +0000] "GET /products"
+this is not a recognized log format
+Jun 26 09:02:01 server sshd[1020]: Failed password for admin from 203.0.113.10 port 53769 ssh2
+172.16.1.11 - - [26/Jun/2026:09:03:05 +0000] "GET /login?id=1 UNION SELECT username,password FROM users HTTP/1.1" 500 777

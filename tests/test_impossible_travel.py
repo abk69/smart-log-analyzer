@@ -118,3 +118,65 @@ def test_custom_geo_map_and_haversine():
     ]
     alerts = detect_impossible_travel(logs, geo_service=service)
     assert len(alerts) == 1
+
+
+def test_identical_timestamps_impossible():
+    """Zero elapsed time between distant cities is treated as impossible."""
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _success("iris", "203.0.113.10", start),  # Mumbai
+        _success("iris", "198.51.100.50", start),  # New York, same timestamp
+    ]
+    alerts = detect_impossible_travel(logs)
+    assert len(alerts) == 1
+    # Infinite speed is serialized as None for JSON friendliness.
+    assert alerts[0].evidence["elapsed_seconds"] == 0
+    assert alerts[0].evidence["required_speed_kmh"] is None
+    assert alerts[0].evidence["distance_km"] > 10000
+
+def test_out_of_order_events_are_sorted():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _success("jade", "198.51.100.50", start + timedelta(minutes=5)),
+        _success("jade", "203.0.113.10", start),
+    ]
+    alerts = detect_impossible_travel(logs)
+    assert len(alerts) == 1
+    assert alerts[0].evidence["previous_location"] == "Mumbai"
+    assert alerts[0].evidence["current_location"] == "New York"
+
+
+def test_multiple_users_independent_sequences():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _success("alice", "203.0.113.10", start),
+        _success("alice", "198.51.100.50", start + timedelta(minutes=5)),
+        _success("bob", "203.0.113.10", start),
+        _success("bob", "203.0.113.20", start + timedelta(hours=4)),  # realistic
+    ]
+    alerts = detect_impossible_travel(logs)
+    assert len(alerts) == 1
+    assert alerts[0].username == "alice"
+
+
+def test_same_location_different_ip_no_alert():
+    mumbai_a = GeoLocation("Mumbai", 19.0760, 72.8777, "IN")
+    mumbai_b = GeoLocation("Mumbai", 19.0800, 72.8800, "IN")
+    service = StaticGeoLocationService({"1.1.1.1": mumbai_a, "1.1.1.2": mumbai_b})
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _success("kate", "1.1.1.1", start),
+        _success("kate", "1.1.1.2", start + timedelta(minutes=1)),
+    ]
+    assert detect_impossible_travel(logs, geo_service=service) == []
+
+
+def test_deterministic_speed_calculation():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _success("leo", "203.0.113.10", start),
+        _success("leo", "198.51.100.50", start + timedelta(minutes=5)),
+    ]
+    first = detect_impossible_travel(logs)[0].evidence["required_speed_kmh"]
+    second = detect_impossible_travel(logs)[0].evidence["required_speed_kmh"]
+    assert first == second

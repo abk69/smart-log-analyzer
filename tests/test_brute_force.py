@@ -146,3 +146,75 @@ def test_custom_threshold_from_config():
     alerts = detect_brute_force(logs, config=cfg)
     assert len(alerts) == 1
     assert alerts[0].evidence["threshold"] == 3
+
+
+def test_threshold_plus_one_still_one_alert():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=i * 5))
+        for i in range(6)
+    ]
+    alerts = detect_brute_force(logs)
+    assert len(alerts) == 1
+    assert alerts[0].evidence["attempts"] == 6
+
+
+def test_out_of_order_timestamps_still_detect():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=40)),
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=10)),
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=30)),
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=0)),
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=20)),
+    ]
+    alerts = detect_brute_force(logs)
+    assert len(alerts) == 1
+    assert alerts[0].evidence["attempts"] == 5
+
+
+def test_duplicate_timestamps_count_separately():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [_failed("admin", "10.0.0.1", start) for _ in range(5)]
+    alerts = detect_brute_force(logs)
+    assert len(alerts) == 1
+    assert alerts[0].evidence["attempts"] == 5
+
+
+def test_two_independent_bursts_two_alerts():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    first = [
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=i * 5))
+        for i in range(5)
+    ]
+    # Gap > 120s window between bursts
+    second_start = start + timedelta(seconds=200)
+    second = [
+        _failed("admin", "10.0.0.1", second_start + timedelta(seconds=i * 5))
+        for i in range(5)
+    ]
+    alerts = detect_brute_force(first + second)
+    assert len(alerts) == 2
+
+
+def test_different_users_same_ip_are_separate():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = []
+    for i in range(5):
+        logs.append(_failed("admin", "10.0.0.1", start + timedelta(seconds=i)))
+    for i in range(5):
+        logs.append(_failed("alice", "10.0.0.1", start + timedelta(seconds=i)))
+    alerts = detect_brute_force(logs)
+    assert len(alerts) == 2
+    assert {a.username for a in alerts} == {"admin", "alice"}
+
+
+def test_same_user_across_different_ips_already_separate():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    logs = [
+        _failed("admin", "10.0.0.1", start + timedelta(seconds=i)) for i in range(5)
+    ] + [
+        _failed("admin", "10.0.0.9", start + timedelta(seconds=i)) for i in range(5)
+    ]
+    alerts = detect_brute_force(logs)
+    assert len(alerts) == 2

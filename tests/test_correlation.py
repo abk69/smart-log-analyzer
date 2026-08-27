@@ -142,3 +142,78 @@ def test_disabled_correlation_keeps_alerts_separate():
     ]
     incidents = correlate_alerts(alerts, config=CorrelationConfig(enabled=False))
     assert len(incidents) == 2
+
+
+def test_exactly_window_boundary_merges():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    alerts = [
+        _alert("BRUTE_FORCE", start),
+        _alert("SQL_INJECTION", start + timedelta(seconds=300), severity="CRITICAL"),
+    ]
+    incidents = correlate_alerts(alerts)
+    assert len(incidents) == 1
+
+
+def test_just_inside_window_merges():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    alerts = [
+        _alert("BRUTE_FORCE", start),
+        _alert("SQL_INJECTION", start + timedelta(seconds=299), severity="CRITICAL"),
+    ]
+    assert len(correlate_alerts(alerts)) == 1
+
+
+def test_just_outside_window_separate():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    alerts = [
+        _alert("BRUTE_FORCE", start),
+        _alert("SQL_INJECTION", start + timedelta(seconds=301), severity="CRITICAL"),
+    ]
+    assert len(correlate_alerts(alerts)) == 2
+
+
+def test_missing_ip_only_handled_safely():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    alerts = [
+        SecurityAlert(
+            alert_type="BRUTE_FORCE",
+            severity="HIGH",
+            timestamp=start,
+            username="admin",
+            ip_address="",
+            description="no ip",
+        ),
+        SecurityAlert(
+            alert_type="IMPOSSIBLE_TRAVEL",
+            severity="HIGH",
+            timestamp=start + timedelta(seconds=30),
+            username="admin",
+            ip_address="",
+            description="no ip 2",
+        ),
+    ]
+    incidents = correlate_alerts(alerts)
+    assert len(incidents) == 1
+    assert "admin" in incidents[0].usernames
+
+
+def test_duplicate_alerts_do_not_inflate_incorrectly():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    a = _alert("XSS", start, ip="1.1.1.1", user="-")
+    b = _alert("XSS", start, ip="1.1.1.1", user="-")
+    incidents = correlate_alerts([a, b])
+    assert len(incidents) == 1
+    assert len(incidents[0].alerts) == 2
+
+
+def test_attack_chain_deterministic():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    alerts = [
+        _alert("SQL_INJECTION", start + timedelta(minutes=2), severity="CRITICAL"),
+        _alert("BRUTE_FORCE", start),
+        _alert("XSS", start + timedelta(minutes=1)),
+    ]
+    first = correlate_alerts(alerts)[0].metadata["attack_chain"]
+    second = correlate_alerts(alerts)[0].metadata["attack_chain"]
+    assert first == second
+    assert first == ["BRUTE_FORCE", "XSS", "SQL_INJECTION"]

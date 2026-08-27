@@ -90,3 +90,52 @@ def test_linux_can_parse_and_malformed():
 def test_linux_malformed_returns_none():
     assert parse_linux_line("not a linux auth line") is None
     assert parse_linux_line("") is None
+
+
+def test_linux_whitespace_only_returns_none():
+    assert parse_linux_line("   \t  ") is None
+
+
+def test_linux_truncated_line_returns_none():
+    assert parse_linux_line("Jun 26 09:01:20 server sshd[1014]: Failed password") is None
+
+
+def test_linux_malformed_timestamp_returns_none():
+    line = (
+        "Xxx 99 99:99:99 server sshd[1014]: "
+        "Failed password for admin from 10.0.0.1 port 22 ssh2"
+    )
+    assert parse_linux_line(line, year=2026) is None
+
+
+def test_linux_very_long_line_does_not_crash():
+    padding = "x" * 8000
+    line = (
+        f"Jun 26 09:01:20 server sshd[1014]: "
+        f"Failed password for admin from 10.0.0.1 port 22 ssh2 {padding}"
+    )
+    # May parse or return None depending on trailing noise; must not raise.
+    result = parse_linux_line(line, year=2026)
+    assert result is None or result.username == "admin"
+
+
+def test_linux_unicode_username():
+    line = (
+        "Jun 26 09:01:20 server sshd[1014]: "
+        "Accepted password for användare from 192.168.1.18 port 46945 ssh2"
+    )
+    entry = parse_linux_line(line, year=2026)
+    assert entry is not None
+    assert entry.username == "användare"
+
+
+def test_linux_different_users_and_ips():
+    for user, ip in (("root", "1.2.3.4"), ("guest", "198.51.100.1"), ("svc", "10.0.0.99")):
+        line = (
+            f"Jun 26 09:01:20 server sshd[1014]: "
+            f"Accepted password for {user} from {ip} port 46945 ssh2"
+        )
+        entry = parse_linux_line(line, year=2026)
+        assert entry is not None
+        assert entry.username == user
+        assert entry.ip_address == ip

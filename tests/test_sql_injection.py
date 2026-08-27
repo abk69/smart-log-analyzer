@@ -113,3 +113,35 @@ def test_evidence_keeps_original_and_normalized():
     assert "or 1=1" in alert.evidence["normalized_request"]
     assert alert.source == "apache"
     assert alert.risk_score > 0
+
+
+def test_waitfor_delay():
+    alerts = detect_sql_injection([_http("/x?id=1;WAITFOR DELAY '0:0:5'")])
+    assert len(alerts) == 1
+    assert alerts[0].evidence["pattern"] == "WAITFOR DELAY"
+
+
+def test_pg_sleep():
+    alerts = detect_sql_injection([_http("/x?id=1;SELECT PG_SLEEP(5)")])
+    assert len(alerts) == 1
+    assert alerts[0].evidence["pattern"] == "PG_SLEEP("
+
+
+def test_double_encoded_or_tautology():
+    # %2520 / %253D decode twice into spaces and '='
+    path = "/login?id=1%2527%2520OR%25201%253D1"
+    alerts = detect_sql_injection([_http(path)])
+    assert len(alerts) == 1
+    assert alerts[0].evidence["pattern"] == "OR 1=1"
+
+
+def test_or_quote_tautology():
+    alerts = detect_sql_injection([_http("/login?id=1' OR '1'='1")])
+    assert len(alerts) == 1
+    assert alerts[0].evidence["pattern"] in {"OR '1'='1'", "quote-OR tautology"}
+
+
+def test_negative_normal_url_and_punctuation():
+    assert detect_sql_injection([_http("/about?ref=home&page=1")]) == []
+    assert detect_sql_injection([_http("/search?q=hello,world!")]) == []
+    assert detect_sql_injection([_http("/docs?note=please+select+carefully")]) == []

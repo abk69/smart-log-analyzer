@@ -1,0 +1,7 @@
+Jun 26 09:01:20 server sshd[1014]: Accepted password for alice from 192.168.1.18 port 46945 ssh2
+2026-06-26T09:00:25 EVENT_ID=4624 USER=bob IP=10.0.0.16 MESSAGE="ok"
+172.16.1.73 - - [26/Jun/2026:09:01:14 +0000] "GET /products HTTP/1.1" 200 342
+Jun 26 09:01:20 server sshd[1014]: something broken
+this is not a log line
+Jun 26 09:02:01 server sshd[1020]: Failed password for carol from 10.0.0.5 port 22 ssh2
+172.16.1.80 - - [26/Jun/2026:09:05:00 +0000] "GET /about HTTP/1.1" 200 100

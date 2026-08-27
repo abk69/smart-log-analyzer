@@ -110,3 +110,28 @@ def test_evidence_structure():
     assert alert.source == "apache"
     assert alert.risk_score > 0
     assert alert.alert_id
+
+
+def test_onmouseover_handler():
+    alerts = detect_xss([_http("/x?q=<div onmouseover=alert(1)>")])
+    assert len(alerts) == 1
+    assert alerts[0].evidence["pattern"] == "onmouseover="
+
+
+def test_img_event_handler_payload():
+    alerts = detect_xss([_http("/x?q=<img src=x onerror=alert(1)>")])
+    assert len(alerts) == 1
+    assert "onerror=" in alerts[0].evidence["matched_indicators"]
+
+
+def test_negative_path_containing_script_word():
+    assert detect_xss([_http("/scripts/app.js")]) == []
+    assert detect_xss([_http("/api/describe?word=javascript")]) == []
+
+
+def test_normalization_boundary_mixed_encoding():
+    alerts = detect_xss(
+        [_http("/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E")]
+    )
+    assert len(alerts) == 1
+    assert "<script" in alerts[0].evidence["normalized_request"]

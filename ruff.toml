@@ -1,0 +1,21 @@
+# Lightweight lint config for Smart Log Analyzer (M9).
+# Run: ruff check analyzer tests main.py tools
+
+target-version = "py311"
+line-length = 100
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "W",   # pycodestyle warnings
+]
+ignore = [
+    "E501",  # line length handled separately; avoid mass rewrites
+]
+
+[lint.per-file-ignores]
+"tests/*" = ["E402", "I001"]
+"tools/*" = ["E402", "I001"]
+"main.py" = ["I001"]

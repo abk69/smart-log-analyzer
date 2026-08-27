@@ -153,3 +153,53 @@ def test_breakdown_always_present():
     incident = score_incident(_single_incident("MEDIUM"))
     assert "risk_breakdown" in incident.evidence
     assert "final_score" in incident.evidence["risk_breakdown"]
+
+
+def test_score_always_within_bounds():
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    cases = [
+        [_alert("TEST", "LOW", start)],
+        [_alert("TEST", "MEDIUM", start)],
+        [_alert("TEST", "HIGH", start, user="admin")],
+        [
+            _alert("A", "CRITICAL", start, user="admin", confidence=0.99),
+            _alert("B", "CRITICAL", start + timedelta(seconds=1), user="admin", confidence=0.99),
+        ],
+    ]
+    for alerts in cases:
+        for incident in score_incidents(correlate_alerts(alerts)):
+            assert 0 <= incident.risk_score <= 100
+
+
+def test_minimum_score_non_negative():
+    cfg = RiskScoringConfig(base_low=0)
+    incident = score_incident(_single_incident("LOW"), config=cfg)
+    assert incident.risk_score == 0
+    assert 0 <= incident.risk_score <= 100
+
+
+def test_exact_100_boundary_stable():
+    cfg = RiskScoringConfig(
+        base_critical=90,
+        multiple_alert_bonus=5,
+        multiple_attack_type_bonus=5,
+        high_confidence_bonus=0,
+        privileged_user_bonus=0,
+        repeated_activity_bonus=0,
+    )
+    start = datetime(2026, 6, 26, 9, 0, 0)
+    alerts = [
+        _alert("A", "CRITICAL", start, confidence=0.5),
+        _alert("B", "CRITICAL", start + timedelta(seconds=1), confidence=0.5),
+    ]
+    incident = score_incidents(correlate_alerts(alerts), config=cfg)[0]
+    assert incident.risk_score == 100
+
+
+def test_disabled_scoring_uses_base_only():
+    incident = score_incident(
+        _single_incident("HIGH"),
+        config=RiskScoringConfig(enabled=False),
+    )
+    assert incident.risk_score == 70
+    assert incident.evidence["risk_breakdown"]["note"] == "global_risk_scoring_disabled"

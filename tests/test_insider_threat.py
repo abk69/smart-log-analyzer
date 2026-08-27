@@ -135,3 +135,61 @@ def test_disabled_config():
 
 def test_empty_logs():
     assert detect_insider_threat([]) == []
+
+
+def test_exact_threshold_alerts():
+    cfg = InsiderThreatConfig(
+        alert_score_threshold=50,
+        score_privileged=30,
+        score_unusual_hour=20,
+        score_sensitive_resource=0,
+        score_unusual_ip=0,
+        score_high_activity=0,
+    )
+    start = datetime(2026, 6, 26, 2, 0, 0)
+    logs = [_login("admin", "10.0.0.5", start)]
+    alerts = detect_insider_threat(logs, config=cfg)
+    assert len(alerts) == 1
+    assert alerts[0].evidence["score"] == 50
+
+
+def test_just_below_threshold_no_alert():
+    cfg = InsiderThreatConfig(
+        alert_score_threshold=51,
+        score_privileged=30,
+        score_unusual_hour=20,
+    )
+    start = datetime(2026, 6, 26, 2, 0, 0)
+    logs = [_login("admin", "10.0.0.5", start)]
+    assert detect_insider_threat(logs, config=cfg) == []
+
+
+def test_two_weak_signals_below_default_threshold():
+    """Unusual hour (20) + unusual IP (20) for non-privileged = 40 < 50."""
+    start = datetime(2026, 6, 26, 2, 0, 0)
+    logs = [
+        _login("alice", "10.0.0.8", start),
+        _login("alice", "10.0.0.8", start + timedelta(minutes=1)),
+        _login("alice", "203.0.113.99", start + timedelta(minutes=2)),
+    ]
+    assert detect_insider_threat(logs) == []
+
+
+def test_multiple_users_independent():
+    start = datetime(2026, 6, 26, 2, 0, 0)
+    logs = [
+        _login("admin", "10.0.0.5", start),
+        _http("admin", "10.0.0.5", "/secret/keys", start + timedelta(minutes=1)),
+        _login("alice", "10.0.0.8", start),
+    ]
+    alerts = detect_insider_threat(logs)
+    assert len(alerts) == 1
+    assert alerts[0].username == "admin"
+
+
+def test_threshold_plus_one():
+    cfg = InsiderThreatConfig(alert_score_threshold=49)
+    start = datetime(2026, 6, 26, 2, 0, 0)
+    logs = [_login("admin", "10.0.0.5", start)]  # score 50 with default weights
+    alerts = detect_insider_threat(logs, config=cfg)
+    assert len(alerts) == 1

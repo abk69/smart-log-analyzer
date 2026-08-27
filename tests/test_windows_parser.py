@@ -46,3 +46,43 @@ def test_windows_malformed_returns_none():
     assert parse_windows_line("EVENT_ID=4624 USER=admin") is None
     assert parse_windows_line("") is None
     assert WindowsParser().can_parse("random text") is False
+
+
+def test_windows_whitespace_only():
+    assert parse_windows_line("   \n") is None
+
+
+def test_windows_malformed_timestamp():
+    line = 'not-a-date EVENT_ID=4624 USER=admin IP=10.0.0.1 MESSAGE="x"'
+    assert parse_windows_line(line) is None
+
+
+def test_windows_missing_username():
+    line = '2026-06-26T09:00:25 EVENT_ID=4624 IP=10.0.0.1 MESSAGE="ok"'
+    assert parse_windows_line(line) is None
+
+
+def test_windows_invalid_event_id():
+    line = '2026-06-26T09:00:25 EVENT_ID=1234 USER=admin IP=10.0.0.1 MESSAGE="x"'
+    assert parse_windows_line(line) is None
+
+
+def test_windows_unicode_username():
+    line = (
+        '2026-06-26T09:00:25 EVENT_ID=4624 USER=ユーザー IP=10.0.0.16 '
+        'MESSAGE="An account was successfully logged on."'
+    )
+    entry = parse_windows_line(line)
+    assert entry is not None
+    assert entry.username == "ユーザー"
+
+
+def test_windows_very_long_message_does_not_crash():
+    msg = "x" * 5000
+    line = (
+        f'2026-06-26T09:00:25 EVENT_ID=4625 USER=admin IP=10.0.0.11 '
+        f'MESSAGE="{msg}"'
+    )
+    entry = parse_windows_line(line)
+    assert entry is not None
+    assert entry.status == "FAILED"
