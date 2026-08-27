@@ -3,7 +3,7 @@ import sys
 
 from analyzer.exceptions import LogAnalyzerError
 from analyzer.parser import read_log_file
-from analyzer.parsers.parser_dispatcher import parse_logs
+from analyzer.parsers.parser_dispatcher import parse_logs_with_stats
 from analyzer.detectors.sql_injection import detect_sql_injection
 from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.password_spray import detect_password_spray
@@ -36,9 +36,13 @@ def main() -> int:
         return 1
 
     # Parse Logs
-    parsed_logs = parse_logs(log_lines)
+    parsed_logs, parse_stats = parse_logs_with_stats(log_lines)
 
-    print(f"\nTotal Parsed Logs : {len(parsed_logs)}")
+    print(f"\nTotal Parsed Logs : {parse_stats.parsed_lines}")
+    if parse_stats.malformed_lines:
+        print(f"Malformed Lines   : {parse_stats.malformed_lines}")
+    if parse_stats.unsupported_lines:
+        print(f"Unsupported Lines : {parse_stats.unsupported_lines}")
 
     # -----------------------------
     # Detection Engine
