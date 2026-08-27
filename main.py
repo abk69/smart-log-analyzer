@@ -8,6 +8,8 @@ from analyzer.detectors.sql_injection import detect_sql_injection
 from analyzer.detectors.brute_force import detect_brute_force
 from analyzer.detectors.password_spray import detect_password_spray
 from analyzer.detectors.xss import detect_xss
+from analyzer.detectors.impossible_travel import detect_impossible_travel
+from analyzer.detectors.insider_threat import detect_insider_threat
 from analyzer.statistics import generate_statistics
 from analyzer.utils import setup_logging
 
@@ -53,6 +55,8 @@ def main() -> int:
     alerts.extend(detect_password_spray(parsed_logs))
     alerts.extend(detect_sql_injection(parsed_logs))
     alerts.extend(detect_xss(parsed_logs))
+    alerts.extend(detect_impossible_travel(parsed_logs))
+    alerts.extend(detect_insider_threat(parsed_logs))
 
     stats = generate_statistics(parsed_logs)
 

@@ -30,8 +30,16 @@ def test_default_config_web_detectors_enabled():
 
 
 def test_default_config_insider_hours():
+    assert DEFAULT_CONFIG.insider_threat.enabled is True
     assert DEFAULT_CONFIG.insider_threat.unusual_hour_start == 0
     assert DEFAULT_CONFIG.insider_threat.unusual_hour_end == 5
+    assert DEFAULT_CONFIG.insider_threat.alert_score_threshold == 50
+    assert DEFAULT_CONFIG.insider_threat.activity_threshold == 20
+
+
+def test_default_config_impossible_travel():
+    assert DEFAULT_CONFIG.impossible_travel.enabled is True
+    assert DEFAULT_CONFIG.impossible_travel.max_plausible_speed_kmh == 900.0
 
 
 def test_default_log_year_is_current_not_hardcoded_2026():
