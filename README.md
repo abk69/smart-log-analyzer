@@ -9,6 +9,7 @@ It runs entirely **local and offline**: read a log file, analyze it, write
 reports. There are no external threat-intelligence APIs, dashboards, or
 automated blocking actions.
 
+**Stack:** Python 3.11+ · scikit-learn · pytest · Ruff · GitHub Actions  
 **Version:** 0.1.0 · **License:** MIT
 
 ---
@@ -132,19 +133,33 @@ Requires **Python 3.11+** (CI uses 3.12).
 
 ```bash
 python -m venv .venv
+```
 
-# Windows
-.venv\Scripts\activate
+Activate the virtual environment:
 
-# Linux / macOS
+Windows (PowerShell):
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Linux / macOS:
+
+```bash
 source .venv/bin/activate
+```
 
+Then install dependencies:
+
+```bash
 python -m pip install -r requirements.txt
 ```
 
 ---
 
 ## Quick Start
+
+A seeded demo log (`logs/security.log`) is included for immediate use.
 
 ```bash
 python main.py logs/security.log
@@ -232,14 +247,63 @@ Artifacts (under `--output`, default `reports/`):
 | `summary.txt` | Concise text summary |
 
 Generated reports are gitignored; keep the `reports/` directory via `.gitkeep`.
+Other generated `logs/*.log` files are ignored; the included demo
+`logs/security.log` is tracked intentionally for Quick Start.
 
 ---
 
 ## Example Output
 
-Console analysis prints parsing stats, log summary, alert/incident severity
-counts, optional detail sections, and paths to any generated reports, ending
-with `Analysis Complete`.
+Illustrative console summary from the seeded demo (`--seed 42 --scenario demo`).
+Exact alert counts can vary slightly with anomaly detection:
+
+```text
+============================================================
+SMART LOG ANALYZER
+============================================================
+
+Input       : logs\security.log
+Analysis    : 0.40 seconds
+
+PARSING
+------------------------------------------------------------
+Total Lines       : 1000
+Parsed            : 1000
+Malformed         : 0
+Unsupported       : 0
+
+LOG SUMMARY
+------------------------------------------------------------
+Total Events      : 1000
+Linux             : 456
+Windows           : 234
+Apache            : 310
+
+Successful Logins : 356
+Failed Logins     : 334
+HTTP Requests     : 310
+
+SECURITY ALERTS
+------------------------------------------------------------
+Total Alerts      : 83
+Critical          : 20
+High              : 51
+Medium            : 12
+
+INCIDENTS
+------------------------------------------------------------
+Total Incidents   : 57
+
+REPORTS
+------------------------------------------------------------
+JSON      : reports\security_report.json
+HTML      : reports\security_report.html
+...
+
+============================================================
+Analysis Complete
+============================================================
+```
 
 ---
 
@@ -268,7 +332,8 @@ smart-log-analyzer/
 │   ├── generate_logs.py
 │   └── benchmark.py
 ├── logs/
-│   └── .gitkeep
+│   ├── .gitkeep
+│   └── security.log       # seeded demo dataset (optional)
 ├── reports/
 │   └── .gitkeep
 ├── .github/workflows/tests.yml
@@ -291,8 +356,8 @@ pytest --cov=analyzer --cov-report=term-missing
 ruff check analyzer tests main.py tools
 ```
 
-CI (`.github/workflows/tests.yml`) installs `requirements.txt` and runs the
-same pytest / coverage steps on Python 3.12.
+CI (`.github/workflows/tests.yml`) installs `requirements.txt`, runs Ruff,
+pytest, and coverage with a 90% floor on Python 3.12.
 
 ---
 

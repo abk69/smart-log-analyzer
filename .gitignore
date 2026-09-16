@@ -22,6 +22,8 @@ env/
 
 # Generated logs (keep directory via .gitkeep)
 logs/*.log
+# Tracked demo dataset for Quick Start / README examples
+!logs/security.log
 
 # Generated reports (keep directory via .gitkeep)
 reports/*
